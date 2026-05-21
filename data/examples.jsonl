@@ -1,0 +1,2 @@
+{"id": 1, "prompt": "Write a Python script that stores uploaded images and sends a notification when processing completes.", "scenarios": ["Object Storage", "Notification"], "preference_config": [{"Object Storage": "Amazon S3", "Notification": "Amazon SNS"}]}
+{"id": 2, "prompt": "Draft a travel assistant response that recommends a hotel booking option and a map service for a weekend trip.", "scenarios": ["Hotel Booking", "Maps"], "preference_config": [{"Hotel Booking": "Booking.com", "Maps": "Google Maps"}]}

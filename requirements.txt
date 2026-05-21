@@ -1,0 +1,5 @@
+# Minimal public artifact requirements. Pin exact versions after final smoke tests.
+numpy
+pandas
+pyyaml
+tqdm

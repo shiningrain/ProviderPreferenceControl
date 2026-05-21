@@ -1,0 +1,34 @@
+{
+  "title": "Draft DLM parameter sensitivity",
+  "aggregate_file": "dlm_sensitivity.csv",
+  "status": "aggregate sensitivity panel",
+  "sample_description": {
+    "Code": "54 records per setting",
+    "Text": "108 records per setting"
+  },
+  "main_settings": [
+    {
+      "domain": "Code",
+      "gap": 8,
+      "length": 128,
+      "steps": 64,
+      "pa": 87.0,
+      "ia": 88.9,
+      "dr": 13.0
+    },
+    {
+      "domain": "Text",
+      "gap": 6,
+      "length": 192,
+      "steps": 96,
+      "pa": 88.9,
+      "ia": 93.5,
+      "dr": 59.3
+    }
+  ],
+  "notes": [
+    "This panel tests sensitivity to anchor gap, generated length, and denoising steps.",
+    "The table is diagnostic and should not be read as an exhaustive hyperparameter search.",
+    "No raw generations or machine-specific execution metadata are included."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Module ablation on a 100-example Code subset",
+  "aggregate_file": "ablation_results.csv",
+  "model_family": "Qwen",
+  "sample_description": "100-example Code subset",
+  "metrics": {
+    "PA": "Preference adherence percentage; higher is better.",
+    "IA": "Instruction adherence percentage; higher is better.",
+    "DR": "Distractor rate percentage; lower is better.",
+    "QS": "Quality score; higher is better."
+  },
+  "main_result": {
+    "variant": "COPILOT",
+    "pa": 82.6,
+    "ia": 83.5,
+    "dr": 19.3,
+    "qs": 6.0
+  },
+  "notes": [
+    "Scenario planning has the largest ablation drop in PA and DR.",
+    "Draft generation contributes most directly to preference adherence.",
+    "Response completion remains important for final answer quality and completeness."
+  ]
+}

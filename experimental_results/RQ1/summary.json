@@ -1,0 +1,44 @@
+{
+  "title": "Main results across Code and NLP",
+  "metrics": {
+    "PA": "Preference adherence percentage; higher is better.",
+    "IA": "Instruction adherence percentage; higher is better.",
+    "DR": "Distractor rate percentage; lower is better.",
+    "QS": "Quality score; higher is better."
+  },
+  "aggregate_file": "main_results.csv",
+  "notes": [
+    "Values are table-level aggregate means from the anonymized manuscript results.",
+    "Closed-source rows report prompt-level and completion-level comparisons only as aggregate table values.",
+    "No raw generations, API accounting, judge traces, or run identifiers are included."
+  ],
+  "highlights": [
+    {
+      "model": "Qwen",
+      "setting": "Multi-task Code",
+      "method": "COPILOT",
+      "pa": 80.3,
+      "ia": 85.3,
+      "dr": 19.0,
+      "qs": 5.8
+    },
+    {
+      "model": "Gemma",
+      "setting": "Multi-task Code",
+      "method": "COPILOT",
+      "pa": 85.0,
+      "ia": 88.8,
+      "dr": 18.3,
+      "qs": 4.5
+    },
+    {
+      "model": "Gemini",
+      "setting": "Multi-task NLP",
+      "method": "COPILOT",
+      "pa": 100.0,
+      "ia": 100.0,
+      "dr": 26.4,
+      "qs": 8.2
+    }
+  ]
+}

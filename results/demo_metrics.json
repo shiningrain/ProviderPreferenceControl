@@ -1,0 +1,14 @@
+{
+  "code_block_presence_rate": 0.5,
+  "distractor_any_hit_rate_codeonly": 0.0,
+  "distractor_any_hit_rate_fulltext": 0.0,
+  "main_full_match_rate_codeonly": 0.5,
+  "main_full_match_rate_fulltext": 1.0,
+  "main_mean_adherence_codeonly": 0.5,
+  "main_mean_adherence_fulltext": 1.0,
+  "main_mismatch_codeonly": {
+    "missing_detection": 2
+  },
+  "main_mismatch_fulltext": {},
+  "n_records": 2
+}

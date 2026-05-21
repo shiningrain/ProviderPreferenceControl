@@ -1,0 +1,12 @@
+# Example evaluation config. Replace keyword files with released sanitized files.
+input_path: results/demo_outputs.jsonl
+output_path: results/demo_metrics.json
+
+metrics:
+  main_vs_distractor: true
+  code_only: true
+  full_text: true
+
+resources:
+  service_keywords: configs/service_keywords.template.json
+  provider_to_service: configs/provider_to_service.template.json

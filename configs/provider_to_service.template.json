@@ -1,0 +1,22 @@
+{
+  "Object Storage": {
+    "AWS": "Amazon S3",
+    "Google": "Google Cloud Storage",
+    "Azure": "Azure Blob Storage"
+  },
+  "Notification": {
+    "AWS": "Amazon SNS",
+    "Google": "Google Pub/Sub",
+    "Azure": "Azure Notification Hubs"
+  },
+  "Hotel Booking": {
+    "Booking": "Booking.com",
+    "Expedia": "Expedia",
+    "Generic": "Generic Hotel Search"
+  },
+  "Maps": {
+    "Google": "Google Maps",
+    "Apple": "Apple Maps",
+    "Generic": "Generic Map Service"
+  }
+}

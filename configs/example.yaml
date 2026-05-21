@@ -1,0 +1,20 @@
+# Example generation config for the anonymized artifact.
+input_path: data/examples.jsonl
+output_path: results/demo_outputs.jsonl
+
+method:
+  task_planning_allowed_categories_source: preference_config
+  task_planning_use_descriptions: true
+  oracle_injection: false
+  force_python_scripts_output: true
+  dlm_only_for_preference_tasks: true
+  completion_repair_max_rounds: 1
+
+generation:
+  repeat_times: 1
+  max_new_tokens: 2048
+  dlm_gen_length: 128
+  dlm_step: 64
+
+models:
+  paths_file: configs/model_paths.template.yaml

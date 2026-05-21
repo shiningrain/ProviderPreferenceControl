@@ -1,0 +1,4 @@
+# Fill in local paths before running generation. Do not commit private paths.
+completion_model_path: /path/to/completion/model
+diffusion_model_path: /path/to/diffusion/model
+cache_dir: /path/to/local/cache
