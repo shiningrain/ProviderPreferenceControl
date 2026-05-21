@@ -1,4 +1,4 @@
-# Example generation config for the anonymized artifact.
+# Example generation config for the public artifact.
 input_path: data/examples.jsonl
 output_path: results/demo_outputs.jsonl
 

@@ -10,4 +10,4 @@ Files:
 - `summary.json`: compact metadata and main operating points.
 - `summary.md`: paper-facing description.
 
-Keep this directory aggregate-only unless raw records have been scrubbed.
+This directory is aggregate-only in the current release.

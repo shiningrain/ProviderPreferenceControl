@@ -12,6 +12,5 @@ Current aggregate files:
 - `RQ2/ablation_results.csv`: module ablation table.
 - `RQ3/dlm_sensitivity.csv`: DLM sensitivity panel.
 
-Only sanitized aggregate summaries should be placed here. Raw generations, logs,
-API accounting files, and private run metadata should stay out of the public
-artifact unless they have been explicitly scrubbed.
+This release keeps the directory aggregate-only. Raw generations, logs, API
+accounting files, and private run metadata are intentionally omitted.

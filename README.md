@@ -1,9 +1,9 @@
 # Provider Preference Control
 
-This repository contains the anonymized artifact for **COPILOT**, a provider
-preference control method for generated code and text. The method follows a
-three-stage pipeline: task planning, diffusion draft generation, and final
-response completion.
+This repository contains the code and artifact materials for **COPILOT**, a
+provider preference control method for generated code and text. The method
+follows a three-stage pipeline: task planning, diffusion draft generation, and
+final response completion.
 
 ## TL;DR
 
@@ -21,8 +21,6 @@ organized to support four common checks:
 ```
 .
   README.md
-  PUBLIC_RELEASE_AUDIT.md
-  RELEASE_CHECKLIST.md
   requirements.txt
   figures/               Paper figures and result-table screenshots for README display.
   dataset/               Compatibility alias for released datasets.
@@ -66,7 +64,7 @@ pip install -r requirements.txt
 
 Large model checkpoints are not included. Put local or downloaded checkpoints
 under paths you control and update `configs/model_paths.template.yaml` before
-running generation. Do not commit filled-in private paths or credentials.
+running generation.
 
 ## Quick Start
 
@@ -152,15 +150,15 @@ Module ablation:
   <img src="figures/table2.png" width="650" alt="Module ablation table">
 </p>
 
-Prefer compact JSON, CSV, or Markdown summaries. Raw generations can be included
-only after they have been scrubbed for private paths, credentials, identities,
-and internal run metadata.
+Raw generations are omitted from this compact release. The included CSV, JSON,
+and Markdown summaries are intended to make the reported aggregate results easy
+to inspect without requiring access to private infrastructure.
 
-## Anonymization
+## Privacy and Credentials
 
-This artifact must not include identity markers, organization paths, private
-server paths, API keys, proxy URLs, private logs, GPU or server identifiers, or
-non-public dataset annotations. All examples should be sanitized before release.
+The repository does not include model checkpoints, private server paths, API
+keys, proxy URLs, private logs, or GPU-specific launch metadata. Configuration
+files under `configs/` are templates and should be filled locally before use.
 
 ## License and Citation
 
@@ -169,8 +167,8 @@ License and citation metadata will be added before public release.
 ```bibtex
 @misc{provider_preference_control_artifact,
   title = {Provider Preference Control Artifact},
-  author = {Anonymous Authors},
+  author = {Authors},
   year = {2026},
-  note = {Anonymized artifact for review}
+  note = {Code and artifact release}
 }
 ```
