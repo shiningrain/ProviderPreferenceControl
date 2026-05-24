@@ -1,8 +1,7 @@
 # Pipeline
 
 This directory contains the no-GPU runnable demo skeleton for the public
-artifact. For method-code interfaces closer to the paper implementation, see
-`../method/`.
+artifact.
 
 The release pipeline should be organized around these stages:
 
@@ -21,17 +20,17 @@ Current public modules:
   completion path.
 - `evaluation.py`: offline main-vs-distractor metrics over generated JSONL
   records.
-- `demo_runner.py`: end-to-end no-GPU demo over `data/examples.jsonl`.
+- `demo_runner.py`: end-to-end no-GPU demo over `dataset/examples.jsonl`.
 
 Run from the release root:
 
 ```bash
 python scripts/run_pipeline.py \
-  --input data/examples.jsonl \
-  --output results/demo_outputs.jsonl
+  --input dataset/examples.jsonl \
+  --output outputs/demo_outputs.jsonl
 python scripts/evaluate_outputs.py \
-  --input results/demo_outputs.jsonl \
-  --output results/demo_metrics.json
+  --input outputs/demo_outputs.jsonl \
+  --output outputs/demo_metrics.json
 ```
 
 The production implementation should still be copied here only after

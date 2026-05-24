@@ -64,8 +64,8 @@ def run_demo_pipeline(input_path: str, output_path: str) -> List[Dict[str, Any]]
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the no-GPU artifact demo pipeline.")
-    parser.add_argument("--input", default="data/examples.jsonl")
-    parser.add_argument("--output", default="results/demo_outputs.jsonl")
+    parser.add_argument("--input", default="dataset/examples.jsonl")
+    parser.add_argument("--output", default="outputs/demo_outputs.jsonl")
     args = parser.parse_args()
 
     records = run_demo_pipeline(args.input, args.output)

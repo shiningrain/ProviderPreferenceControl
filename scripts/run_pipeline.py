@@ -33,8 +33,8 @@ def resolve_output(path: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/example.yaml", help="Accepted for interface compatibility.")
-    parser.add_argument("--input", default="data/examples.jsonl")
-    parser.add_argument("--output", default="results/demo_outputs.jsonl")
+    parser.add_argument("--input", default="dataset/examples.jsonl")
+    parser.add_argument("--output", default="outputs/demo_outputs.jsonl")
     args = parser.parse_args()
 
     input_path = resolve_input(args.input)

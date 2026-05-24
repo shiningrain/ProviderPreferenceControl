@@ -1,7 +1,12 @@
 # Motivation Cases
 
-This directory is a compatibility alias for motivation examples.
+This directory contains sanitized qualitative examples used to motivate provider
+preference control.
 
-The current sanitized example is in `../cases/motivation_case_01.md`. Public
-case studies can be mirrored here after they are checked for private paths,
-identities, credentials, and unpublished annotations.
+Files:
+
+- `motivation_case_01.md`: a compact example contrasting a preference-leaking
+  response with a preference-controlled response.
+
+Additional case studies can be added here after they are checked for private
+paths, identities, credentials, and unpublished annotations.

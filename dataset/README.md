@@ -1,10 +1,14 @@
 # Dataset
 
-This directory is a compatibility alias for released datasets.
+This directory contains sanitized data examples for the public artifact.
 
-For the first release pass, sanitized examples and schema documentation live in
-`../data/`. If larger public splits are released, place them here with a short
-manifest that records:
+Files:
+
+- `examples.jsonl`: small JSONL examples for the no-GPU demo pipeline.
+- `schema.md`: released data-field documentation.
+
+If larger public splits are released, place them here with a short manifest
+that records:
 
 - split name;
 - number of input prompts;

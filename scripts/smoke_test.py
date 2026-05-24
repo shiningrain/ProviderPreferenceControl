@@ -28,9 +28,9 @@ def main() -> int:
             "--config",
             args.config,
             "--input",
-            "data/examples.jsonl",
+            "dataset/examples.jsonl",
             "--output",
-            "results/demo_outputs.jsonl",
+            "outputs/demo_outputs.jsonl",
         ],
         cwd=root,
     )
@@ -39,13 +39,13 @@ def main() -> int:
             sys.executable,
             "scripts/evaluate_outputs.py",
             "--input",
-            "results/demo_outputs.jsonl",
+            "outputs/demo_outputs.jsonl",
             "--output",
-            "results/demo_metrics.json",
+            "outputs/demo_metrics.json",
         ],
         cwd=root,
     )
-    run([sys.executable, "scripts/validate_jsonl.py", "results/demo_outputs.jsonl"], cwd=root)
+    run([sys.executable, "scripts/validate_jsonl.py", "outputs/demo_outputs.jsonl"], cwd=root)
     print("smoke-ok")
     return 0
 

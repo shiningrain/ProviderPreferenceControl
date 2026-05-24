@@ -32,11 +32,11 @@ def resolve_output(path: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="results/demo_outputs.jsonl")
+    parser.add_argument("--input", default="outputs/demo_outputs.jsonl")
     parser.add_argument("--config", default="configs/eval.yaml", help="Accepted for interface compatibility.")
     parser.add_argument("--service-keywords", default="configs/service_keywords.template.json")
     parser.add_argument("--provider-to-service", default="configs/provider_to_service.template.json")
-    parser.add_argument("--output", default="results/demo_metrics.json")
+    parser.add_argument("--output", default="outputs/demo_metrics.json")
     args = parser.parse_args()
 
     input_path = resolve_input(args.input)

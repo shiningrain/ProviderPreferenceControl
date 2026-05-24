@@ -22,22 +22,14 @@ organized to support four common checks:
 .
   README.md
   requirements.txt
-  figures/               Paper figures and result-table screenshots for README display.
-  dataset/               Compatibility alias for released datasets.
-  pipeline/              No-GPU runnable demo skeleton.
-  motivation_cases/      Compatibility alias for motivation examples.
+  dataset/               Sanitized examples and data schema.
+  pipeline/              No-GPU runnable demo skeleton and evaluation utilities.
   experimental_results/  RQ1/RQ2/RQ3 aggregate result folders.
-  data/                  Sanitized examples, schemas, and small sample splits.
-  method/                Sanitized method-code interfaces close to the paper implementation.
-  results/               Demo outputs and compact summaries.
-  cases/                 Sanitized motivation and case-study materials.
-  scripts/               Reproduction and evaluation entry points.
+  motivation_cases/      Sanitized motivation and case-study materials.
+  figures/               Paper figures and result-table screenshots for README display.
   configs/               Local-path-free configuration templates.
+  scripts/               Reproduction and evaluation entry points.
 ```
-
-The compatibility folders are intentionally lightweight in this first pass. They
-make the package familiar to readers of artifacts that use `dataset/`,
-`pipeline/`, `motivation_cases/`, and `experimental_results/` at the root.
 
 ## Motivation
 
@@ -73,17 +65,17 @@ Run the main pipeline on a small sanitized example file:
 ```bash
 python scripts/run_pipeline.py \
   --config configs/example.yaml \
-  --input data/examples.jsonl \
-  --output results/demo_outputs.jsonl
+  --input dataset/examples.jsonl \
+  --output outputs/demo_outputs.jsonl
 ```
 
 Evaluate generated outputs:
 
 ```bash
 python scripts/evaluate_outputs.py \
-  --input results/demo_outputs.jsonl \
+  --input outputs/demo_outputs.jsonl \
   --config configs/eval.yaml \
-  --output results/demo_metrics.json
+  --output outputs/demo_metrics.json
 ```
 
 Run the full no-GPU smoke test:
@@ -113,17 +105,10 @@ It mirrors the release interfaces without loading model checkpoints:
 - `evaluation.py`: offline keyword metrics for generated records;
 - `demo_runner.py`: JSONL input expansion and end-to-end demo flow.
 
-The `method/` directory is closer to the paper implementation. It contains
-sanitized interfaces for task planning, anchor construction, constrained DLM
-draft preparation, completion prompt construction, and end-to-end flow wiring.
-Model calls are abstract protocols or stubs so users can plug in their own
-planner, draft generator, and completion model without inheriting private paths
-or local infrastructure code.
-
 Input records use JSON Lines. Each row contains a natural-language `prompt`, a
 list of main `scenarios`, and one or more `preference_config` objects mapping
-scenario names to provider-specific services. See `data/schema.md` and
-`data/examples.jsonl`.
+scenario names to provider-specific services. See `dataset/schema.md` and
+`dataset/examples.jsonl`.
 
 Generated records should include identifiers, the active preference
 configuration, optional task-planning metadata, and the final response text.

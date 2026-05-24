@@ -1,6 +1,6 @@
 # Example generation config for the public artifact.
-input_path: data/examples.jsonl
-output_path: results/demo_outputs.jsonl
+input_path: dataset/examples.jsonl
+output_path: outputs/demo_outputs.jsonl
 
 method:
   task_planning_allowed_categories_source: preference_config

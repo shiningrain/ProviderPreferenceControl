@@ -4,7 +4,7 @@ This directory contains example configuration files with placeholders only.
 
 Current contents:
 
-- `example.yaml`: small pipeline configuration for `data/examples.jsonl`.
+- `example.yaml`: small pipeline configuration for `dataset/examples.jsonl`.
 - `eval.yaml`: keyword-metric evaluation configuration.
 - `model_paths.template.yaml`: local checkpoint placeholders.
 - `service_keywords.template.json`: tiny keyword map for the public examples.

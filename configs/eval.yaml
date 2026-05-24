@@ -1,6 +1,6 @@
 # Example evaluation config. Replace keyword files with released sanitized files.
-input_path: results/demo_outputs.jsonl
-output_path: results/demo_metrics.json
+input_path: outputs/demo_outputs.jsonl
+output_path: outputs/demo_metrics.json
 
 metrics:
   main_vs_distractor: true
