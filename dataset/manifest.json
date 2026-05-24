@@ -1,0 +1,49 @@
+{
+  "title": "Released benchmark datasets",
+  "description": "Final sanitized JSONL splits used for the paper aggregate experiments.",
+  "format": "JSON Lines. Each row contains a prompt, scenario labels, and preference_config entries.",
+  "splits": [
+    {
+      "path": "dataset/code/single_task.jsonl",
+      "domain": "code",
+      "records": 292,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/code/multi_task_2.jsonl",
+      "domain": "code",
+      "records": 150,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/code/multi_task_3.jsonl",
+      "domain": "code",
+      "records": 500,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/text/single_task.jsonl",
+      "domain": "text",
+      "records": 115,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/text/multi_task_2.jsonl",
+      "domain": "text",
+      "records": 165,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/text/multi_task_3.jsonl",
+      "domain": "text",
+      "records": 575,
+      "source_role": "main_benchmark"
+    },
+    {
+      "path": "dataset/code/subsets/multi_task_3_rq2_100.jsonl",
+      "domain": "code",
+      "records": 100,
+      "source_role": "rq2_code_subset"
+    }
+  ]
+}

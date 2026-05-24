@@ -1,6 +1,7 @@
 {
   "title": "Module ablation on a 100-example Code subset",
   "aggregate_file": "ablation_results.csv",
+  "dataset_file": "../../dataset/code/subsets/multi_task_3_rq2_100.jsonl",
   "model_family": "Qwen",
   "sample_description": "100-example Code subset",
   "metrics": {

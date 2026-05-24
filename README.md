@@ -22,7 +22,7 @@ organized to support four common checks:
 .
   README.md
   requirements.txt
-  dataset/               Sanitized examples and data schema.
+  dataset/               Sanitized benchmark splits, examples, and schema.
   pipeline/              No-GPU runnable demo skeleton and evaluation utilities.
   experimental_results/  RQ1/RQ2/RQ3 aggregate result folders.
   motivation_cases/      Sanitized motivation and case-study materials.
@@ -107,8 +107,9 @@ It mirrors the release interfaces without loading model checkpoints:
 
 Input records use JSON Lines. Each row contains a natural-language `prompt`, a
 list of main `scenarios`, and one or more `preference_config` objects mapping
-scenario names to provider-specific services. See `dataset/schema.md` and
-`dataset/examples.jsonl`.
+scenario names to provider-specific services. See `dataset/schema.md`,
+`dataset/manifest.json`, and the released Code/Text splits under `dataset/`.
+The small `dataset/examples.jsonl` file is only for the no-GPU demo pipeline.
 
 Generated records should include identifiers, the active preference
 configuration, optional task-planning metadata, and the final response text.

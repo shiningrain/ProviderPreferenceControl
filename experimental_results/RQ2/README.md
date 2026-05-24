@@ -6,6 +6,8 @@ runtime sanity check for Code outputs.
 Files:
 
 - `ablation_results.csv`: module ablation table.
+- `../../dataset/code/subsets/multi_task_3_rq2_100.jsonl`: released 100-example
+  Code subset used by the ablation supplement.
 - `sandbox_runtime_results.csv`: sandbox dry-run aggregate table.
 - `sandbox_runtime_summary.json`: compact metadata and headline sandbox values.
 - `sandbox_runtime.md`: paper-facing interpretation of the sandbox check.
