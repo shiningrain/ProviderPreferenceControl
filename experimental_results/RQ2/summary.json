@@ -16,9 +16,24 @@
     "dr": 19.3,
     "qs": 6.0
   },
+  "sandbox_supplement": {
+    "aggregate_file": "sandbox_runtime_results.csv",
+    "summary_file": "sandbox_runtime_summary.json",
+    "event_example_file": "sandbox_event_example.jsonl",
+    "sample_description": "aligned 300-record Code subset",
+    "harness_mode": "isolated-functions",
+    "caveat": "Mocked dry-run structural executability check with fake SDK and runtime stubs; not live cloud-service execution.",
+    "proofer_dlm": {
+      "sandbox_success": 84.3,
+      "runtime_pa": 46.3,
+      "runtime_ia": 62.0,
+      "runtime_dr": 18.3
+    }
+  },
   "notes": [
     "Scenario planning has the largest ablation drop in PA and DR.",
     "Draft generation contributes most directly to preference adherence.",
-    "Response completion remains important for final answer quality and completeness."
+    "Response completion remains important for final answer quality and completeness.",
+    "The sandbox supplement shows that high mocked executability does not necessarily imply provider control at runtime."
   ]
 }

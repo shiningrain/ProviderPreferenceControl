@@ -1,0 +1,53 @@
+{
+  "title": "Sandbox dry-run code sanity check",
+  "domain": "Code",
+  "sample_description": "Aligned 300-record Code subset",
+  "harness_mode": "isolated-functions",
+  "timeout_seconds": 4.0,
+  "caveat": "This is a mocked structural executability check with fake SDK, import, subprocess, file, and network stubs. It is not a live cloud-service execution benchmark.",
+  "metrics": {
+    "sandbox_success": "Percentage of extracted Python scripts that complete under the dry-run harness before timeout.",
+    "runtime_pa": "Main-scene preference adherence over runtime call events only; higher is better.",
+    "runtime_ia": "Mean instruction adherence over runtime call events only; higher is better.",
+    "runtime_dr": "Distractor-provider activation over runtime call events only; lower is better."
+  },
+  "headline": {
+    "PROOFER-DLM": {
+      "n": 300,
+      "sandbox_success": 84.3,
+      "runtime_pa": 46.3,
+      "runtime_ia": 62.0,
+      "runtime_dr": 18.3
+    },
+    "Plan+Template Anchor": {
+      "n": 300,
+      "sandbox_success": 81.0,
+      "runtime_pa": 43.7,
+      "runtime_ia": 58.5,
+      "runtime_dr": 15.0
+    },
+    "zero_shot": {
+      "n": 300,
+      "sandbox_success": 92.3,
+      "runtime_pa": 19.7,
+      "runtime_ia": 43.2,
+      "runtime_dr": 53.3
+    },
+    "constrained": {
+      "n": 300,
+      "sandbox_success": 91.0,
+      "runtime_pa": 19.0,
+      "runtime_ia": 42.0,
+      "runtime_dr": 49.7
+    }
+  },
+  "takeaway": [
+    "Prompt-only baselines can achieve high sandbox success while still activating many distractor providers at runtime.",
+    "PROOFER-DLM is not the highest method on sandbox success alone, but it gives much stronger runtime provider control than prompt-only baselines.",
+    "The Plan+Template Anchor variant narrows the gap to PROOFER-DLM, which suggests that provider-bearing structure is important, while the DLM draft still provides a complete method instance."
+  ],
+  "files": {
+    "aggregate_csv": "sandbox_runtime_results.csv",
+    "event_log_example": "sandbox_event_example.jsonl"
+  }
+}

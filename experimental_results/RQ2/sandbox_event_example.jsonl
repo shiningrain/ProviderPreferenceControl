@@ -1,0 +1,64 @@
+{"kind": "import_missing", "path": "msvcrt", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import_missing", "path": "_winapi", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import_missing", "path": "usercustomize", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "google.cloud", "args": ["'compute_v1'", "'container_v1'"], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "google.api_core", "args": ["'operation'"], "kwargs": {"level": "0"}}
+{"kind": "call", "path": "google.cloud.compute_v1.InstancesClient", "args": [], "kwargs": {}}
+{"kind": "call", "path": "google.cloud.container_v1.ClusterManagerClient", "args": [], "kwargs": {}}
+{"kind": "harness.skip_main_guard", "path": "if __name__ == __main__", "args": [], "kwargs": {}}
+{"kind": "import", "path": "google.cloud", "args": ["'texttospeech'"], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "google.api_core.exceptions", "args": ["'GoogleAPICallError'"], "kwargs": {"level": "0"}}
+{"kind": "call", "path": "google.cloud.texttospeech.TextToSpeechClient", "args": [], "kwargs": {}}
+{"kind": "harness.skip_main_guard", "path": "if __name__ == __main__", "args": [], "kwargs": {}}
+{"kind": "import", "path": "pandas", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "numpy", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "matplotlib.pyplot", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "seaborn", "args": [], "kwargs": {"level": "0"}}
+{"kind": "import", "path": "statsmodels.tsa.seasonal", "args": ["'seasonal_decompose'"], "kwargs": {"level": "0"}}
+{"kind": "harness.skip_main_guard", "path": "if __name__ == __main__", "args": [], "kwargs": {}}
+{"kind": "harness.call_function", "path": "build_and_push_image", "args": [], "kwargs": {}}
+{"kind": "subprocess.run", "path": "subprocess.run", "args": ["['gcloud', 'config', 'set', 'project', 'your-gcp-project-id']"], "kwargs": {"check": "True"}}
+{"kind": "subprocess.run", "path": "subprocess.run", "args": ["['gcloud', 'config', 'set', 'compute/zone', 'us-central1-a']"], "kwargs": {"check": "True"}}
+{"kind": "subprocess.run", "path": "subprocess.run", "args": ["['gcloud', 'builds', 'submit', '--tag', 'gcr.io/your-project-id/web-app:latest']"], "kwargs": {"check": "True"}}
+{"kind": "harness.call_function", "path": "create_kubernetes_cluster", "args": [], "kwargs": {}}
+{"kind": "call", "path": "google.cloud.container_v1.NodeConfig", "args": [], "kwargs": {"machine_type": "'e2-medium'", "disk_size_gb": "50", "oauth_scopes": "['https://www.googleapis.com/auth/cloud-platform']"}}
+{"kind": "call", "path": "google.cloud.container_v1.Cluster", "args": [], "kwargs": {"cluster": "'sales-analysis-cluster'", "initial_node_count": "3", "node_config": "<MagicObject google.cloud.container_v1.NodeConfig()>"}}
+{"kind": "call", "path": "google.cloud.container_v1.ClusterManagerClient().create_cluster", "args": [], "kwargs": {"parent": "'projects/your-gcp-project-id/locations/us-central1-a'", "cluster": "<MagicObject google.cloud.container_v1.Cluster()>"}}
+{"kind": "call", "path": "google.cloud.container_v1.ClusterManagerClient().create_cluster().result", "args": [], "kwargs": {}}
+{"kind": "harness.call_function", "path": "deploy_container_to_k8s", "args": [], "kwargs": {}}
+{"kind": "subprocess.run", "path": "subprocess.run", "args": ["['kubectl', 'create', 'deployment', 'web-app', '--image', 'gcr.io/your-project-id/web-app:latest']"], "kwargs": {"check": "True"}}
+{"kind": "subprocess.run", "path": "subprocess.run", "args": ["['kubectl', 'expose', 'deployment', 'web-app', '--type=LoadBalancer', '--port=80', '--target-port=5000']"], "kwargs": {"check": "True"}}
+{"kind": "harness.call_function", "path": "synthesize_speech", "args": [], "kwargs": {}}
+{"kind": "call", "path": "google.cloud.texttospeech.SynthesisInput", "args": [], "kwargs": {"text": "<MagicObject harness.arg.synthesize_speech.text>"}}
+{"kind": "call", "path": "google.cloud.texttospeech.VoiceSelectionParams", "args": [], "kwargs": {"language_code": "'en-US'", "name": "'en-US-Standard-C'", "ssml_gender": "<MagicObject google.cloud.texttospeech.SsmlVoiceGender.FEMALE>"}}
+{"kind": "call", "path": "google.cloud.texttospeech.AudioConfig", "args": [], "kwargs": {"audio_encoding": "<MagicObject google.cloud.texttospeech.AudioEncoding.MP3>"}}
+{"kind": "call", "path": "google.cloud.texttospeech.TextToSpeechClient().synthesize_speech", "args": [], "kwargs": {"input": "<MagicObject google.cloud.texttospeech.SynthesisInput()>", "voice": "<MagicObject google.cloud.texttospeech.VoiceSelectionParams()>", "audio_config": "<MagicObject google.cloud.texttospeech.AudioConfig()>"}}
+{"kind": "file_write", "path": "output.mp3", "args": ["'wb'"], "kwargs": {}}
+{"kind": "file.write", "path": "output.mp3", "args": ["<MagicObject google.cloud.texttospeech.TextToSpeechClient().synthesize_speech().audio_content>"], "kwargs": {"mode": "'wb'"}}
+{"kind": "harness.call_function", "path": "load_sales_data", "args": [], "kwargs": {}}
+{"kind": "call", "path": "pandas.read_csv", "args": ["<MagicObject harness.arg.load_sales_data.file_path>"], "kwargs": {}}
+{"kind": "getitem", "path": "pandas.read_csv()['Date']", "args": [], "kwargs": {}}
+{"kind": "call", "path": "pandas.to_datetime", "args": ["<MagicObject pandas.read_csv()['Date']>"], "kwargs": {}}
+{"kind": "setitem", "path": "pandas.read_csv()['Date']", "args": ["<MagicObject pandas.to_datetime()>"], "kwargs": {}}
+{"kind": "call", "path": "pandas.read_csv().set_index", "args": ["'Date'"], "kwargs": {"inplace": "True"}}
+{"kind": "harness.call_function", "path": "plot_time_series", "args": [], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.figure", "args": [], "kwargs": {"figsize": "(14, 6)"}}
+{"kind": "getitem", "path": "harness.arg.plot_time_series.df['Sales']", "args": [], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.plot", "args": ["<MagicObject harness.arg.plot_time_series.df.index>", "<MagicObject harness.arg.plot_time_series.df['Sales']>"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.title", "args": ["'Sales Over Time'"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.xlabel", "args": ["'Date'"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.ylabel", "args": ["'Sales'"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.grid", "args": ["True"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.show", "args": [], "kwargs": {}}
+{"kind": "harness.call_function", "path": "perform_seasonal_decomposition", "args": [], "kwargs": {}}
+{"kind": "getitem", "path": "harness.arg.perform_seasonal_decomposition.df['Sales']", "args": [], "kwargs": {}}
+{"kind": "call", "path": "statsmodels.tsa.seasonal.seasonal_decompose", "args": ["<MagicObject harness.arg.perform_seasonal_decomposition.df['Sales']>"], "kwargs": {"model": "'multiplicative'", "period": "12"}}
+{"kind": "call", "path": "statsmodels.tsa.seasonal.seasonal_decompose().plot", "args": [], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.show", "args": [], "kwargs": {}}
+{"kind": "harness.call_function", "path": "plot_correlation_heatmap", "args": [], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.figure", "args": [], "kwargs": {"figsize": "(10, 8)"}}
+{"kind": "call", "path": "harness.arg.plot_correlation_heatmap.df.corr", "args": [], "kwargs": {}}
+{"kind": "call", "path": "seaborn.heatmap", "args": ["<MagicObject harness.arg.plot_correlation_heatmap.df.corr()>"], "kwargs": {"annot": "True", "cmap": "'coolwarm'"}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.title", "args": ["'Correlation Heatmap of Sales and Features'"], "kwargs": {}}
+{"kind": "call", "path": "matplotlib.pyplot.pyplot.show", "args": [], "kwargs": {}}
+{"kind": "harness.completed", "path": "isolated-functions", "args": ["30", "8"], "kwargs": {}}

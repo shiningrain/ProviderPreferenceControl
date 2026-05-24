@@ -136,6 +136,8 @@ The current release includes table-ready aggregate summaries:
 
 - `experimental_results/RQ1/main_results.csv`: main comparison across Code and NLP;
 - `experimental_results/RQ2/ablation_results.csv`: module ablations;
+- `experimental_results/RQ2/sandbox_runtime_results.csv`: mocked runtime
+  provider-control sanity check for Code outputs;
 - `experimental_results/RQ3/dlm_sensitivity.csv`: DLM sensitivity panel.
 
 Main comparison:
@@ -152,7 +154,9 @@ Module ablation:
 
 Raw generations are omitted from this compact release. The included CSV, JSON,
 and Markdown summaries are intended to make the reported aggregate results easy
-to inspect without requiring access to private infrastructure.
+to inspect without requiring access to private infrastructure. For the sandbox
+supplement, we include only aggregate metrics and one sanitized event-trace
+example rather than the full dry-run logs.
 
 ## Privacy and Credentials
 
