@@ -29,8 +29,8 @@ generation:
 
 models:
   planner:
-    # Use "local" or "api". If reuse_target is true and model_path is empty,
-    # task planning reuses the target completion model.
+    # Use "local" or "api". If reuse_target is true and no separate
+    # model_path/model is set, task planning reuses the target completion model.
     kind: local
     model_path:
     reuse_target: true

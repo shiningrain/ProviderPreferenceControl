@@ -274,12 +274,22 @@ def build_real_runner(config: Mapping[str, Any], artifact_root: Path, domain: st
     target = make_text_generator(target_cfg, default_kind="local")
 
     planner_cfg = dict(models.get("planner", {}) or {})
-    if str(planner_cfg.get("kind", "local")).lower() in {"api", "openai", "openai_compatible"}:
+    planner_has_separate_model = bool(planner_cfg.get("model_path") or planner_cfg.get("model"))
+    if planner_cfg.get("reuse_target", True) and not planner_has_separate_model:
+        planner = target
+    elif str(planner_cfg.get("kind", "local")).lower() in {"api", "openai", "openai_compatible"}:
         merged_planner = dict(api_defaults)
         merged_planner.update(planner_cfg)
         planner_cfg = merged_planner
-    if planner_cfg.get("reuse_target", True) and not planner_cfg.get("model_path") and str(planner_cfg.get("kind", "local")) == str(target_cfg.get("kind", "local")):
-        planner = target
+        planner_cfg.update(
+            {
+                "max_new_tokens": gen_cfg.get("planner_max_new_tokens", 512),
+                "temperature": gen_cfg.get("planner_temperature", 0.0),
+                "top_p": gen_cfg.get("top_p", 0.95),
+                "top_k": gen_cfg.get("top_k", 50),
+            }
+        )
+        planner = make_text_generator(planner_cfg, default_kind="local")
     else:
         planner_cfg.update(
             {

@@ -11,9 +11,9 @@ Provider preference control asks a model to satisfy a user request while using
 the provider choices specified for the relevant task scenarios. This release is
 organized to support five common checks:
 
-1. inspect sanitized data examples and preference configurations.
-2. run a no-model check to check installation and JSONL schemas;
-3. run COPILOT pipeline with local checkpoints or configured API
+1. inspect sanitized data examples and preference configurations;
+2. run a no-model mock path to check installation and JSONL schemas;
+3. run the real COPILOT pipeline with local checkpoints or configured API
    endpoints;
 4. run prompt baselines on the same JSONL format;
 5. evaluate generated outputs with keyword-based preference metrics.
@@ -25,7 +25,7 @@ organized to support five common checks:
   README.md
   requirements.txt
   dataset/               Sanitized benchmark splits, examples, and schema.
-  pipeline/              COPILOT implementation, and evaluation utilities.
+  pipeline/              COPILOT implementation, mock path, and evaluation utilities.
   experimental_results/  RQ1/RQ2/RQ3 aggregate result folders.
   motivation_cases/      Sanitized motivation and case-study materials.
   figures/               Paper figures and result-table screenshots for README display.
@@ -65,13 +65,13 @@ pip install -r requirements.txt
 
 Large model checkpoints are not included. Put local or downloaded checkpoints
 under paths you control and update `configs/real_pipeline.template.yaml` or pass
-model paths on the command line before running generation. API credentials,
+model paths on the command line before running real generation. API credentials,
 when used, should be supplied through a local environment variable such as
 `PROVIDER_KEY`; no credential value is included in this repository.
 
 ## Quick Start
 
-Run the no-model check on a small sanitized example file:
+Run the no-model mock path on a small sanitized example file:
 
 ```bash
 python scripts/run_pipeline.py \
@@ -81,7 +81,7 @@ python scripts/run_pipeline.py \
   --output outputs/demo_outputs.jsonl
 ```
 
-This is only for the installation and schema check. It validates that the
+The mock path is only an installation and schema check. It validates that the
 JSONL reader, task-plan schema, anchor formatting, output schema, and evaluator
 entry points work in a no-model environment. It does not load LLaDA, does not
 call a planner LLM, and does not reproduce the paper method.
@@ -96,10 +96,11 @@ To run the actual COPILOT method, provide two model roles:
   with `--target-llm` or `models.target.model_path`.
 
 By default, the task planner reuses the target LLM. This is the common setup
-for running COPILOT as a baseline. If you want a separate planner model, pass
-`--planner-model` or set `models.planner.model_path`.
+for running COPILOT as a baseline, including API targets. If you want a
+separate planner model, pass `--planner-model` or set
+`models.planner.model_path`.
 
-Run the COPILOT pipeline after filling in local model paths:
+Run the real COPILOT pipeline after filling in local model paths:
 
 ```bash
 python scripts/run_pipeline.py \
@@ -124,6 +125,23 @@ python scripts/run_pipeline.py \
   --planner-model /path/to/planner-llm \
   --dlm-model /path/to/LLaDA-1.5 \
   --target-llm /path/to/target-llm
+```
+
+OpenAI-compatible API target with the same model reused for planning:
+
+```bash
+export PROVIDER_KEY=your-local-key
+python scripts/run_pipeline.py \
+  --mode real \
+  --config configs/real_pipeline.template.yaml \
+  --input dataset/code/multi_task_3.jsonl \
+  --output outputs/copilot_code_m3_api.jsonl \
+  --domain code \
+  --dlm-model /path/to/LLaDA-1.5 \
+  --target-kind api \
+  --api-base https://api.example.com/v1 \
+  --api-model provider-model-name \
+  --credential-env PROVIDER_KEY
 ```
 
 Run prompt baselines:
@@ -175,14 +193,14 @@ choices.
 This public package includes the runnable COPILOT pipeline under `pipeline/`:
 
 - `task_planning.py`: preference-config-bounded task-plan parser,
-  and model-backed planner adapter;
+  deterministic fallback planner, and model-backed planner adapter;
 - `dlm_draft.py`: local LLaDA-style constrained masked-denoising draft wrapper;
 - `anchors.py`: code and text anchor construction templates;
-- `completion.py`: final-completion prompt builders and deterministic completion;
+- `completion.py`: final-completion and repair prompt builders;
 - `model_adapters.py`: HuggingFace local generation and key-free API adapter;
-- `runner.py`: COPILOT runner over JSONL inputs;
+- `runner.py`: real COPILOT runner over JSONL inputs;
 - `evaluation.py`: offline keyword metrics for generated records;
-- `demo_runner.py`: no-model workflow used by smoke tests.
+- `demo_runner.py`: no-model mock flow used by smoke tests.
 
 Input records use JSON Lines. Each row contains a natural-language `prompt`, a
 list of main `scenarios`, and one or more `preference_config` objects mapping

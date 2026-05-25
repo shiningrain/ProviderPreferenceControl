@@ -41,6 +41,23 @@ python scripts/run_pipeline.py \
   --target-llm /path/to/target-llm
 ```
 
+OpenAI-compatible API target example:
+
+```bash
+export PROVIDER_KEY=your-local-key
+python scripts/run_pipeline.py \
+  --mode real \
+  --config configs/real_pipeline.template.yaml \
+  --input dataset/code/multi_task_3.jsonl \
+  --output outputs/copilot_code_m3_api.jsonl \
+  --domain code \
+  --dlm-model /path/to/LLaDA-1.5 \
+  --target-kind api \
+  --api-base https://api.example.com/v1 \
+  --api-model provider-model-name \
+  --credential-env PROVIDER_KEY
+```
+
 Baseline example:
 
 ```bash
