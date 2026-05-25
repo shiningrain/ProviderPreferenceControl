@@ -6,6 +6,8 @@ Expected entry points:
 
 - `run_pipeline.py`: run the full method on a JSONL input file.
 - `evaluate_outputs.py`: compute preference adherence summaries.
+- `baseline_utils.py`: build zero-shot, grouped, step-wise, and lightweight
+  constrained baseline prompts, plus lexical preference-token boost helpers.
 - `check_ascii.py`: verify release text and code are ASCII-only.
 - `check_pipeline_imports.py`: import and lightly exercise public pipeline modules.
 - `check_no_symlinks.py`: verify the release tree contains no symbolic links.
@@ -14,7 +16,6 @@ Expected entry points:
 
 Planned later entry points:
 
-- `run_baselines.py`: run prompt-only comparison methods.
 - `summarize_results.py`: build compact table-ready summaries.
 - `reproduce_tables.sh`: reproduce released table artifacts.
 

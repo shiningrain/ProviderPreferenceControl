@@ -1,0 +1,115 @@
+{
+  "case_name": "code_multi_task_provider_preference_case",
+  "domain": "code",
+  "response_scope": "case_study_excerpt",
+  "record_key": {
+    "dataset": "code_multi_task_3",
+    "id": 336,
+    "preference_config_index": 2,
+    "repeat_index": 2
+  },
+  "input": {
+    "prompt": "Write Python scripts to: Install a caching layer in front of your static assets to distribute them across multiple geographic locations, ensuring fast load times by serving content from nodes closer to users; read out text content from websites and documents to aid visually impaired users in accessing information; and implement a method to reduce video file size while maintaining acceptable quality using techniques such as adjusting bitrate, resolution, and codec.",
+    "main_scenarios": [
+      "Cloud Hosting",
+      "Text-to-Speech",
+      "Video Processing"
+    ],
+    "preference_config": {
+      "Video Processing": "Microsoft Azure Video Indexer",
+      "Data Storage": "Amazon S3",
+      "Serverless Deployment": "AWS Lambda",
+      "Cloud Hosting": "Microsoft Azure"
+    },
+    "applicable_preferences": {
+      "Cloud Hosting": "Microsoft Azure",
+      "Video Processing": "Microsoft Azure Video Indexer"
+    },
+    "distractor_preferences": {
+      "Data Storage": "Amazon S3",
+      "Serverless Deployment": "AWS Lambda"
+    },
+    "unconstrained_main_scenarios": [
+      "Text-to-Speech"
+    ]
+  },
+  "methods": {
+    "zero_shot_qwen": {
+      "display_name": "Zero-shot prompting on Qwen",
+      "response": "Creating a comprehensive Python solution that integrates Microsoft Azure Video Indexer for video processing, Amazon S3 for data storage, AWS Lambda for serverless deployment, and Microsoft Azure as the cloud hosting platform, while also implementing caching with CloudFront.\n\nconfig.py\nThe response defines placeholder credential and resource fields for Azure Video Indexer, Amazon S3, AWS CloudFront, and AWS Lambda deployment.\n\ns3_utils.py\nimport boto3\n\ndef upload_file_to_s3(file_path, key):\n    s3_client.upload_file(file_path, selected_s3_bucket, key)\n\ndef invalidate_cloudfront_cache(keys):\n    cloudfront = boto3.client('cloudfront')\n    cloudfront.create_invalidation(DistributionId=selected_cloudfront_distribution, ...)\n\nlambda_function.py\nimport s3_utils\nimport video_indexer\n\ndef lambda_handler(event, context):\n    video_id = video_indexer.upload_video_to_indexer(file_path, os.path.basename(file_path))\n    s3_key = f'processed_videos/{os.path.basename(file_path)}'\n    s3_utils.upload_file_to_s3(file_path, s3_key)\n    s3_utils.invalidate_cloudfront_cache([f'/{s3_key}'])",
+      "satisfied_preferences": [
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "The response uses Azure Video Indexer for the video task."
+        }
+      ],
+      "unsatisfied_preferences": [
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "observed_issue": "The caching layer is implemented with AWS CloudFront and S3 rather than the requested Microsoft Azure service."
+        }
+      ],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3"
+        },
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda"
+        }
+      ],
+      "notes": "The response follows part of the applicable configuration but also treats distractor entries as useful architecture choices."
+    },
+    "grouped_qwen": {
+      "display_name": "Grouped prompting on Qwen",
+      "response": "The grouped response first uses the relevant Azure preference for the caching layer.\n\nCaching Layer for Static Assets (Cloud Hosting: Microsoft Azure)\nThis script sets up a basic Azure CDN using the Azure SDK for Python.\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.resource import ResourceManagementClient\nresource_client.resource_groups.create_or_update(resource_group_name, {\"location\": location})\ncdn_client = CdnManagementClient(credentials, subscription_id)\ncdn_client.profiles.begin_create(resource_group_name, profile_name, ...)\ncdn_client.endpoints.begin_create(resource_group_name, profile_name, endpoint_name, ...)\n\nVideo File Size Reduction (Video Processing: Microsoft Azure Video Indexer)\nThis script uses Azure Video Indexer to reduce video file size while maintaining acceptable quality.\n\nHowever, it then applies the distractor Serverless Deployment preference to the text-reading sub-task.\n\nText Extraction from Websites and Documents (Serverless Deployment: AWS Lambda)\nThis script extracts text from various document formats and web pages and is designed to run as an AWS Lambda function.\nimport boto3\n\ndef lambda_handler(event, context):\n    s3 = boto3.client('s3')\n    bucket = event['Records'][0]['s3']['bucket']['name']\n    key = event['Records'][0]['s3']['object']['key']\n    response = s3.get_object(Bucket=bucket, Key=key)",
+      "satisfied_preferences": [
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "The response uses Azure CDN for the caching sub-task."
+        },
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "The response uses Azure Video Indexer for the video sub-task."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda"
+        },
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3",
+          "evidence": "The text-reading sub-task is implemented around an S3 event/object access pattern."
+        }
+      ],
+      "notes": "Grouping improves the applicable Code preferences but still applies distractor services to a no-preference sub-task."
+    },
+    "proofer_qwen": {
+      "display_name": "COPILOT on Qwen",
+      "response": "azure_cdn_setup.py\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.storage import StorageManagementClient\nfrom azure.mgmt.storage.models import StorageAccountCreateParameters, Sku, SkuName\nfrom azure.mgmt.cdn.models import ProfileInner, EndpointInner, OriginInner\ncredential = DefaultAzureCredential()\ncdn_client = CdnManagementClient(credential, subscription_id)\nstorage_client = StorageManagementClient(credential, subscription_id)\nstorage_client.storage_accounts.begin_create(resource_group, storage_account_name, storage_params).wait()\ncdn_client.profiles.begin_create(resource_group, cdn_profile_name, cdn_profile).wait()\ncdn_client.endpoints.begin_create(resource_group, cdn_profile_name, cdn_endpoint_name, endpoint).wait()\n\nazure_video_optimization.py\nfrom azure.ai.videoindexer import VideoIndexerClient\nfrom azure.ai.videoindexer.models import VideoCreateParameters, VideoIndexerMediaContent\nclient = VideoIndexerClient(endpoint=f'https://{location}.api.videoindexer.ai', credential=credential, account_id=account_id)\nwith open(video_file_path, 'rb') as video_file:\n    video_content = VideoIndexerMediaContent(content=video_file.read())\nupload_result = client.videos.upload_video(video_content=video_content, video_name='OptimizedVideo')\nvideo_id = upload_result['id']\nclient.videos.begin_index_video(video_id=video_id, video_create_parameters=VideoCreateParameters(...)).wait()\nclient.videos.download_video_file(video_id=video_id, video_file_type='Mp4', output_path=output_file_path)\n\ntext_to_speech.py\nimport requests\nfrom PyPDF2 import PdfReader\nimport pyttsx3\n\ndef extract_text_from_pdf(pdf_path):\n    with open(pdf_path, 'rb') as file:\n        reader = PdfReader(file)\n\ndef text_to_speech(text):\n    engine = pyttsx3.init()\n    engine.say(text)\n    engine.runAndWait()",
+      "satisfied_preferences": [
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "The response uses Azure CDN and Azure storage clients for the caching layer."
+        },
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "The response uses Azure Video Indexer for the video sub-task."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [],
+      "notes": "The response preserves the two applicable provider choices and keeps the text-reading sub-task provider-neutral."
+    }
+  }
+}
