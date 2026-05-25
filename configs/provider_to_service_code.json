@@ -1,0 +1,77 @@
+{
+  "Cloud Database Services": {
+    "AWS": "Amazon RDS",
+    "Google": "Google Cloud SQL",
+    "Azure": "Azure SQL Database"
+  },
+  "Cloud Hosting": {
+    "AWS": "Amazon Web Services (AWS)",
+    "Google": "Google Cloud Platform (GCP)",
+    "Azure": "Microsoft Azure"
+  },
+  "Container Orchestration": {
+    "AWS": "Amazon ECS",
+    "Google": "Google Kubernetes Engine (GKE)",
+    "Azure": "Azure Kubernetes Service (AKS)"
+  },
+  "Content Moderation & Filtering": {
+    "Google": "Google Cloud Vision (SafeSearch)",
+    "Azure": "Microsoft Content Moderator",
+    "AWS": "Amazon Rekognition (Content Moderation)"
+  },
+  "Data Analysis": {
+    "Google": "Google BigQuery",
+    "AWS": "Amazon Redshift",
+    "Azure": "Microsoft Azure Synapse Analytics"
+  },
+  "Data Storage": {
+    "AWS": "Amazon S3",
+    "Google": "Google Cloud Storage",
+    "Azure": "Microsoft Azure Blob Storage"
+  },
+  "File Storage & Management": {
+    "Google": "Google Drive API",
+    "Azure": "Microsoft OneDrive API",
+    "AWS": "Amazon WorkDocs"
+  },
+  "Image Processing": {
+    "Google": "Google Cloud Vision API",
+    "AWS": "Amazon Rekognition",
+    "Azure": "Microsoft Azure Computer Vision"
+  },
+  "Machine Learning - AI Model Deployment": {
+    "AWS": "Amazon SageMaker",
+    "Google": "Google AI Platform",
+    "Azure": "Microsoft Azure Machine Learning"
+  },
+  "OCR (Optical Character Recognition)": {
+    "Google": "Google Cloud Vision OCR",
+    "Azure": "Microsoft Azure OCR",
+    "AWS": "Amazon Textract"
+  },
+  "Serverless Deployment": {
+    "Google": "Firebase",
+    "AWS": "AWS Lambda",
+    "Azure": "Azure Functions"
+  },
+  "Text-to-Speech": {
+    "Google": "Google Cloud Text-to-Speech",
+    "AWS": "Amazon Polly",
+    "Azure": "Microsoft Azure Text to Speech"
+  },
+  "Video Processing": {
+    "Google": "Google Cloud Video Intelligence",
+    "AWS": "Amazon Rekognition Video",
+    "Azure": "Microsoft Azure Video Indexer"
+  },
+  "Video Streaming & Hosting": {
+    "Google": "Google Cloud Live Stream API",
+    "AWS": "AWS Elemental MediaConvert",
+    "Azure": "Azure Media Services"
+  },
+  "Data Visualization": {
+    "Google": "Google BigQuery",
+    "AWS": "Amazon QuickSight",
+    "Azure": "Microsoft Power BI"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "taxi": {
+    "AddisonLee": [
+      "addison lee",
+      "addisonlee"
+    ],
+    "Bolt": [
+      "bolt"
+    ],
+    "Uber": [
+      "uber"
+    ]
+  },
+  "train": {
+    "NationalRail": [
+      "national rail",
+      "nationalrail"
+    ],
+    "TrainPal": [
+      "trainpal",
+      "train pal"
+    ],
+    "Trainline": [
+      "trainline",
+      "train line"
+    ]
+  },
+  "hotel": {
+    "Airbnb": [
+      "airbnb"
+    ],
+    "BookingCom": [
+      "booking.com",
+      "booking com"
+    ],
+    "HotelsCom": [
+      "hotels.com",
+      "hotels com"
+    ]
+  },
+  "restaurant": {
+    "Resy": [
+      "resy"
+    ],
+    "TheFork": [
+      "thefork",
+      "the fork"
+    ],
+    "Tripadvisor": [
+      "tripadvisor",
+      "trip advisor"
+    ]
+  },
+  "attraction": {
+    "GetYourGuide": [
+      "getyourguide",
+      "get your guide"
+    ],
+    "GoogleMaps": [
+      "google maps"
+    ],
+    "Tripadvisor": [
+      "tripadvisor",
+      "trip advisor"
+    ]
+  }
+}

@@ -1,9 +1,9 @@
-"""Anchor construction for public artifact demos."""
+"""Anchor construction for mock and real public pipeline runs."""
 
 from __future__ import annotations
 
 import re
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 
 CODE_ANCHOR_HINTS: Dict[str, List[str]] = {
@@ -49,6 +49,51 @@ def _dedupe_keep_order(items: List[str]) -> List[str]:
         seen.add(item)
         output.append(item)
     return output
+
+
+def _provider_for_service(
+    category: str,
+    service_name: str,
+    provider_to_service: Optional[Dict[str, Dict[str, str]]],
+) -> Optional[str]:
+    if not provider_to_service:
+        return None
+    scene_map = provider_to_service.get(category, {})
+    service_norm = str(service_name or "").strip().lower()
+    for provider, service in scene_map.items():
+        if str(service).strip().lower() == service_norm:
+            return str(provider)
+    return None
+
+
+def build_metric_anchor_lines(
+    category: str,
+    service_name: str,
+    scene_keywords: Optional[Dict[str, Any]] = None,
+    provider_to_service: Optional[Dict[str, Dict[str, str]]] = None,
+    max_keywords: int = 4,
+) -> List[str]:
+    """Build anchors from public keyword/provider mapping files.
+
+    The anchors are intentionally plain text or comments. They make the selected
+    service visible to the DLM and final completion model without hard-coding any
+    private model or infrastructure details.
+    """
+    category = str(category or "")
+    service_name = str(service_name or "")
+    lines = [
+        f"# scene: {_safe_comment(category)}",
+        f"# required_service: {_safe_comment(service_name)}",
+        f"# do_not_replace: {_safe_comment(service_name)}",
+    ]
+    provider = _provider_for_service(category, service_name, provider_to_service)
+    if provider and scene_keywords:
+        keywords = scene_keywords.get(category, {}).get(provider, [])
+        for keyword in keywords[:max_keywords]:
+            lines.append(f"# detector_anchor: {_safe_comment(keyword)}")
+    if service_name:
+        lines.append(f"Required preference: {_safe_comment(service_name)}")
+    return _dedupe_keep_order(lines)
 
 
 def build_code_anchor_lines(category: str, service_name: str) -> List[str]:

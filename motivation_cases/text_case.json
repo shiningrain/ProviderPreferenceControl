@@ -1,7 +1,7 @@
 {
   "case_name": "text_single_task_high_pa_high_dr_case",
   "domain": "text",
-  "response_scope": "case_study_excerpt",
+  "response_scope": "aligned_method_outputs",
   "record_key": {
     "dataset": "text_single_task",
     "id": 1,
@@ -48,7 +48,123 @@
           "service": "Tripadvisor"
         }
       ],
-      "notes": "The response has high preference adherence for the requested hotel scenario but also follows distractor preferences for taxi and attraction planning."
+      "notes": "The response has high preference adherence for the requested hotel scenario but also follows distractor preferences for taxi and attraction planning.",
+      "status": "success",
+      "source_record": {
+        "dataset": "text_single_task",
+        "id": 1,
+        "preference_config_index": 0,
+        "repeat_index": 0,
+        "method_key": "zero_shot"
+      }
+    },
+    "grouped": {
+      "display_name": "Grouped prompting",
+      "status": "success",
+      "source_record": {
+        "id": 1,
+        "preference_config_index": 0,
+        "repeat_index": 0,
+        "dataset": "text_single_task",
+        "method_key": "grouped"
+      },
+      "response": "Certainly! Below is a step-by-step plan using the specified service providers to book a stay for 1 person for **4 nights starting from Saturday** on **Airbnb**. If that option is not available, the plan will adjust to a **2-night stay**.\n\n---\n\n### Step 1: Open Airbnb\n- Go to [Airbnb's website](https://www.airbnb.com) or open the Airbnb app.\n- Log in or create an account if you haven\u2019t already.\n\n---\n\n### Step 2: Search for Accommodation\n- On the search bar, enter your **destination city**.\n- Set the check-in date to **Saturday**.\n- Set the number of **nights to 4**.\n- Specify the number of **guests as 1**.\n- Click **Search**.\n\n---\n\n### Step 3: Filter and Browse Listings\n- Use filters (e.g., price range, amenities, ratings) to narrow down options.\n- Look for listings that match your preferences and budget.\n\n---\n\n### Step 4: Check Availability for 4 Nights\n- Click on a listing that interests you.\n- On the availability calendar, confirm that the **4-night stay starting from Saturday** is available.\n- If the 4-night stay is available, proceed to the next step.\n\n---\n\n### Step 5: Book the 4-Night Stay\n- Click **Reserve** or **Book**.\n- Fill in any required information (e.g., payment method).\n- Review the booking summary and finalize the booking.\n\n---\n\n### Step 6: If 4 Nights Are Not Available\n- If the 4-night stay is **not available**, go back to the search results.\n- Change the number of **nights to 2**.\n- Repeat Steps 3\u20135 to book a **2-night stay starting from Saturday**.\n\n---\n\n### Step 7: Confirmation\n- Once booked, Airbnb will send a confirmation email with all the details.\n- Save the confirmation for your records.\n\n---\n\n### Step 8: Optional \u2013 Plan Attractions Using Tripadvisor\n- Go to [Tripadvisor's website](https://www.tripadvisor.com).\n- Search for **attractions or things to do** in the destination city.\n- Read reviews and select activities you'd like to do during your stay.\n- Note the addresses and opening times to plan your day(s).\n\n---\n\n### Step 9: Optional \u2013 Arrange Taxi Services Using Addison Lee\n- Go to [Addison Lee's website](https://www.addisonlee.com) or use their app.\n- Enter your **pickup location** and **destination**.\n- Book a taxi for your arrival and departure days (or any local travel needs).\n- Confirm the booking and wait for the driver to arrive.\n\n---\n\nLet me know if you'd like a specific example using a real city!",
+      "satisfied_preferences": [
+        {
+          "scenario": "hotel",
+          "expected_service": "Airbnb",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "taxi",
+          "service": "Addison Lee",
+          "detected_services": [
+            "Addison Lee"
+          ]
+        },
+        {
+          "scenario": "attraction",
+          "service": "Tripadvisor",
+          "detected_services": [
+            "Tripadvisor"
+          ]
+        }
+      ]
+    },
+    "step_wise": {
+      "display_name": "Step-wise prompting",
+      "status": "success",
+      "source_record": {
+        "id": 1,
+        "preference_config_index": 0,
+        "repeat_index": 0,
+        "dataset": "text_single_task",
+        "method_key": "step_wise"
+      },
+      "response": "**Book a 4-Night Stay for One Person Starting from Saturday \u2013 A Step-by-Step Plan**\n\nThe goal is to book a 4-night stay for one person starting from Saturday using Airbnb. If a 4-night stay is not available, the plan will adjust to a 2-night stay. This step-by-step guide will use specific tools to ensure a smooth and organized booking process.\n\n1. **Hotel Booking via Airbnb**  \n   - Search for available listings on Airbnb starting on Saturday for 4 nights.  \n   - If 4-night availability is not found, adjust the booking to 2 nights.  \n   - Select an accommodation based on preferences such as location, price, and amenities, and proceed with the booking.\n\n2. **Taxi Booking via Addison Lee**  \n   - Book a taxi using Addison Lee for both arrival and departure days.  \n   - Confirm the pickup and drop-off times and locations with the taxi service to ensure timely and convenient transportation.\n\n3. **Attraction Planning via Tripadvisor**  \n   - Use Tripadvisor to research and select top-rated attractions in the area.  \n   - Plan a daily itinerary based on Tripadvisor reviews and ratings, ensuring that the selected activities fit the duration of the stay.\n\nThis step-by-step plan ensures a seamless trip planning experience by using Airbnb for accommodation, Addison Lee for taxi services, and Tripadvisor for attraction planning. By following these steps, the booking process becomes efficient and well-organized, adapting to any changes in availability with ease.",
+      "satisfied_preferences": [
+        {
+          "scenario": "hotel",
+          "expected_service": "Airbnb",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "taxi",
+          "service": "Addison Lee",
+          "detected_services": [
+            "Addison Lee"
+          ]
+        },
+        {
+          "scenario": "attraction",
+          "service": "Tripadvisor",
+          "detected_services": [
+            "Tripadvisor"
+          ]
+        }
+      ]
+    },
+    "constrained": {
+      "display_name": "Constrained prompting",
+      "status": "success",
+      "source_record": {
+        "id": 1,
+        "preference_config_index": 0,
+        "repeat_index": 0,
+        "dataset": "text_single_task",
+        "method_key": "constrained"
+      },
+      "response": "Here's a **step-by-step plan** for booking a **1-person trip for 4 nights starting from Saturday**, using the tools you specified:\n\n---\n\n## \u2705 **Step-by-Step Travel Booking Plan**\n\n---\n\n### **\ud83d\udcc5 Step 1: Choose Travel Dates**\n\n- **Start Date:** Saturday (4-night stay: Saturday to Tuesday)\n- **Alternative Option:** If 4 nights are not available, choose a **2-night stay** (Saturday to Monday)\n- **Person:** 1 person\n\n---\n\n### **\u2708\ufe0f Step 2: Book a Flight (Optional Step)**\n\nIf you're traveling from a different city, you may need to book a flight:\n- **Tool:** Use a flight booking platform like Expedia, Skyscanner, or Google Flights.\n- **Note:** If you're within city limits and not flying, skip to Step 3.\n\n---\n\n### **\ud83d\ude97 Step 3: Book a Taxi Using Addison Lee**\n\n- **Visit the Addison Lee website or app:** [https://www.addisonlee.com/](https://www.addisonlee.com/)\n- **Steps:**\n  1. Sign in or create an account.\n  2. Enter **your pickup location** and **destination** (e.g., airport to hotel).\n  3. Choose **Saturday as the pickup date** and **time** (based on your flight arrival or starting time).\n  4. Select the **type of car** (e.g., standard, premium).\n  5. Confirm the booking.\n- **Note:** If needed, book another taxi for the **return journey** on Tuesday or Monday (depending on 4 or 2 nights).\n\n---\n\n### **\ud83c\udfe0 Step 4: Book Accommodation on Airbnb**\n\n- **Visit Airbnb:** [https://www.airbnb.com/](https://www.airbnb.com/)\n- **Steps:**\n  1. Go to the **destination city**.\n  2. Set **check-in date to Saturday** and **check-out date to Tuesday** (for 4 nights).\n  3. Select **1 guest**.\n  4. Use filters like:\n     - \u201cEntire home\u201d\n     - \u201cSuperhost\u201d\n     - \u201cRecent reviews\u201d\n  5. Browse and select a suitable listing.\n  6. If 4-night stays are not available or too expensive, **change the check-out date to Monday** (2-night stay).\n  7. Confirm the booking and make the payment.\n\n---\n\n### **\ud83c\udfa1 Step 5: Plan Attractions Using TripAdvisor**\n\n- **Visit TripAdvisor:** [https://www.tripadvisor.com/](https://www.tripadvisor.com/)\n- **Steps:**\n  1. Go to the **destination city**.\n  2. Look for **top-rated attractions**, tours, or experiences.\n  3. Filter by:\n     - Price\n     - Rating (e.g., 4.5+ stars)\n     - Duration\n  4. Select **1-2 attractions per day** (e.g., Saturday, Sunday, Monday).\n  5. Check if **bookings are required** for tickets or tours.\n  6. If booking is required:\n     - Use TripAdvisor to book the experience directly.\n     - Follow the instructions to confirm the booking.\n\n---\n\n### **\ud83d\udcdd Step 6: Create a Travel Itinerary (Optional but Recommended)**\n\n- Use Google Docs, Google Calendar, or a travel planning app (e.g., TripIt, Rome2Rio).\n- Add the following:\n  - Taxi pickup times\n  - Hotel check-in and check-out dates\n  - Attraction bookings with times and addresses\n  - Flight times (if applicable)\n\n---\n\n## \u2705 Summary Table\n\n| Step | Tool         | Action                              |\n|------|--------------|-------------------------------------|\n| 1    | Manual       | Choose travel dates (4 or 2 nights) |\n| 2    | Flight tool  | Book flight (if needed)             |\n| 3    | Addison Lee  | Book taxi from airport to hotel     |\n| 4    | Airbnb       | Book hotel for 4 or 2 nights        |\n| 5    | TripAdvisor  | Book and plan attractions           |\n| 6    | Google Docs  | Create a travel itinerary           |\n\n---\n\nLet me know the **destination city and travel dates**, and I can help you find options and fill in the details!",
+      "satisfied_preferences": [
+        {
+          "scenario": "hotel",
+          "expected_service": "Airbnb",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "taxi",
+          "service": "Addison Lee",
+          "detected_services": [
+            "Addison Lee"
+          ]
+        },
+        {
+          "scenario": "attraction",
+          "service": "Tripadvisor",
+          "detected_services": [
+            "Tripadvisor"
+          ]
+        }
+      ]
     },
     "proofer": {
       "display_name": "COPILOT",
@@ -62,7 +178,15 @@
       ],
       "unsatisfied_preferences": [],
       "distractor_preferences_activated": [],
-      "notes": "The response stays within the requested hotel-booking scenario and does not expand into taxi or attraction planning."
+      "notes": "The response stays within the requested hotel-booking scenario and does not expand into taxi or attraction planning.",
+      "status": "success",
+      "source_record": {
+        "dataset": "text_single_task",
+        "id": 1,
+        "preference_config_index": 0,
+        "repeat_index": 0,
+        "method_key": "proofer"
+      }
     }
   }
 }

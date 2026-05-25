@@ -1,19 +1,68 @@
-"""Preference-config-bounded task planning helpers.
-
-The release pipeline constrains task categories to the active preference
-configuration. A production system can replace the mock planner with a model,
-but the parser and sanitizer should keep the same contract.
-"""
+"""Preference-config-bounded task planning helpers."""
 
 from __future__ import annotations
 
 import ast
 import json
 import re
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 
 Task = Dict[str, Optional[str]]
+
+
+SCENARIO_DESCRIPTIONS: Dict[str, str] = {
+    "Cloud Database Services": "Create, connect to, administer, or query managed cloud databases.",
+    "Cloud Hosting": "Deploy, host, scale, monitor, or operate applications on cloud infrastructure.",
+    "Container Orchestration": "Build, deploy, and operate containerized workloads with orchestration platforms.",
+    "Content Moderation & Filtering": "Detect, classify, or filter unsafe or undesired content.",
+    "Data Analysis": "Analyze datasets with queries, aggregation, forecasting, or reporting.",
+    "Data Storage": "Store and retrieve files or objects in cloud storage buckets.",
+    "File Storage & Management": "Manage user files, documents, sharing, permissions, and metadata.",
+    "Image Processing": "Analyze or transform images, including labels, OCR, faces, or objects.",
+    "Machine Learning - AI Model Deployment": "Train, register, deploy, or serve machine learning models.",
+    "OCR (Optical Character Recognition)": "Extract text from scanned images or documents.",
+    "Serverless Deployment": "Deploy event-driven functions and serverless applications.",
+    "Text-to-Speech": "Convert text into spoken audio with TTS APIs.",
+    "Video Processing": "Analyze, index, transcode, watermark, or extract information from videos.",
+    "Video Streaming & Hosting": "Host, stream, package, encode, or deliver video content.",
+    "Data Visualization": "Create dashboards, charts, reports, or visual analytics from data.",
+    "taxi": "Book or plan a taxi, private-hire ride, transfer, pickup, drop-off, or fare estimate.",
+    "train": "Search, compare, or book rail journeys, timetables, tickets, and train constraints.",
+    "hotel": "Find, compare, or book accommodation, rooms, stays, dates, guests, and amenities.",
+    "restaurant": "Find, compare, review, or reserve restaurants and table bookings.",
+    "attraction": "Find or plan tourist attractions, tickets, sightseeing, and visit logistics.",
+}
+
+
+TASK_PLANNING_SYSTEM = """You perform task planning for a provider preference control pipeline.
+
+Return only a JSON list. Each item must have exactly these keys:
+- "task_category": one of the available scenario names below, or null
+- "task_prompt": a concise subtask grounded in the user request
+
+Rules:
+- Do not invent tasks that are not present in the user request.
+- Assign a non-null category only when the subtask is clearly supported by the request.
+- If a subtask has no matching available category, use null.
+- Do not include explanations outside the JSON list.
+
+Available scenarios:
+{category_lines}
+
+Examples:
+Input: Write a Python script to store images in cloud storage and process them for object detection.
+Output: [
+  {{"task_category": "Data Storage", "task_prompt": "store images in cloud storage"}},
+  {{"task_category": "Image Processing", "task_prompt": "process images for object detection"}}
+]
+
+Input: Book a hotel for two nights and reserve a restaurant nearby.
+Output: [
+  {{"task_category": "hotel", "task_prompt": "book a hotel for two nights"}},
+  {{"task_category": "restaurant", "task_prompt": "reserve a nearby restaurant"}}
+]
+"""
 
 
 def extract_json_list(text: str) -> Optional[str]:
@@ -92,6 +141,62 @@ def attach_preferences(tasks: List[Task], preference_config: Dict[str, str]) -> 
             }
         )
     return enriched
+
+
+def build_task_planning_system(
+    allowed_categories: Sequence[str],
+    use_descriptions: bool = True,
+) -> str:
+    """Build the system prompt used by the public real planner."""
+    lines = []
+    for category in allowed_categories:
+        if use_descriptions:
+            desc = SCENARIO_DESCRIPTIONS.get(str(category), "")
+            suffix = f": {desc}" if desc else ""
+            lines.append(f'- "{category}"{suffix}')
+        else:
+            lines.append(f'- "{category}"')
+    return TASK_PLANNING_SYSTEM.format(category_lines="\n".join(lines))
+
+
+def _generated_text(result: Any) -> str:
+    return str(getattr(result, "text", result) or "")
+
+
+def plan_with_model(
+    prompt: str,
+    preference_config: Dict[str, str],
+    generator: Any,
+    allowed_categories: Optional[Sequence[str]] = None,
+    use_descriptions: bool = True,
+    attempts: int = 3,
+) -> Tuple[bool, List[Dict[str, Optional[str]]], Dict[str, Any]]:
+    """Run a model planner, parse its JSON, and attach preferences."""
+    categories = list(allowed_categories or preference_config.keys())
+    system = build_task_planning_system(categories, use_descriptions=use_descriptions)
+    meta: Dict[str, Any] = {
+        "planner": "model",
+        "allowed_categories": categories,
+        "attempts": 0,
+        "raw_responses": [],
+    }
+    last_message = "not run"
+    for attempt in range(1, int(attempts) + 1):
+        meta["attempts"] = attempt
+        result = generator.generate(str(prompt), system=system)
+        text = _generated_text(result)
+        meta["raw_responses"].append(text)
+        ok, tasks, message = parse_task_plan(text, categories)
+        last_message = message
+        if ok:
+            enriched = attach_preferences(tasks, preference_config)
+            meta["parse_message"] = message
+            meta["taskList"] = enriched
+            return True, enriched, meta
+
+    meta["parse_message"] = last_message
+    meta["taskList"] = []
+    return False, [], meta
 
 
 def plan_from_preference_config(prompt: str, preference_config: Dict[str, str]) -> List[Dict[str, Optional[str]]]:

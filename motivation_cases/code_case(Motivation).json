@@ -1,7 +1,7 @@
 {
   "case_name": "code_multi_task_provider_preference_case",
   "domain": "code",
-  "response_scope": "case_study_excerpt",
+  "response_scope": "aligned_method_outputs",
   "record_key": {
     "dataset": "code_multi_task_3",
     "id": 336,
@@ -36,80 +36,202 @@
   "methods": {
     "zero_shot_qwen": {
       "display_name": "Zero-shot prompting on Qwen",
-      "response": "Creating a comprehensive Python solution that integrates Microsoft Azure Video Indexer for video processing, Amazon S3 for data storage, AWS Lambda for serverless deployment, and Microsoft Azure as the cloud hosting platform, while also implementing caching with CloudFront.\n\nconfig.py\nAZURE_VIDEO_INDEXER_CREDENTIAL = 'your-azure-video-indexer-credential'\nAZURE_VIDEO_INDEXER_LOCATION = 'trial'\nAZURE_VIDEO_INDEXER_ACCOUNT = 'your-account-id'\nAWS_ACCESS_CREDENTIAL = 'your-access-credential'\nAWS_PRIVATE_CREDENTIAL = 'your-private-credential'\nS3_BUCKET_NAME = 'your-bucket-name'\nCLOUDFRONT_DISTRIBUTION = 'your-distribution-id'\nAZURE_CDN_PROFILE_NAME = 'your-cdn-profile'\nAZURE_CDN_ENDPOINT_NAME = 'your-cdn-endpoint'\nTESSERACT_CMD = 'path-to-tesseract'\n\ns3_utils.py\nimport boto3\n\ndef upload_file_to_s3(file_path, key):\n    s3_client.upload_file(file_path, selected_s3_bucket, key)\n\ndef invalidate_cloudfront_cache(keys):\n    cloudfront = boto3.client('cloudfront')\n    cloudfront.create_invalidation(DistributionId=selected_cloudfront_distribution, ...)\n\nlambda_function.py\nimport s3_utils\nimport video_indexer\n\ndef lambda_handler(event, context):\n    video_id = video_indexer.upload_video_to_indexer(file_path, os.path.basename(file_path))\n    s3_key = f'processed_videos/{os.path.basename(file_path)}'\n    s3_utils.upload_file_to_s3(file_path, s3_key)\n    s3_utils.invalidate_cloudfront_cache([f'/{s3_key}'])",
+      "status": "success",
+      "source_record": {
+        "id": 336,
+        "preference_config_index": 2,
+        "repeat_index": 2,
+        "dataset": "code_multi_task_3",
+        "method_key": "zero_shot_qwen"
+      },
+      "response": "Creating a comprehensive Python solution that integrates **Microsoft Azure Video Indexer** for video processing, **Amazon S3** for data storage, **AWS Lambda** for serverless deployment, and **Microsoft Azure** as the cloud hosting platform, while also implementing **caching with CloudFront (or similar)**, and **text extraction for accessibility**, is a multi-faceted task. Below is a modular Python script breakdown, with explanations for each component.\n\n---\n\n## \ud83d\ude80 **Overview of the Architecture**\n\n### 1. **Caching Layer with CloudFront (AWS)**\n- **Purpose**: Serve static assets from the nearest edge location.\n- **Implementation**: Use AWS CloudFront in front of an S3 bucket.\n\n### 2. **Text Extraction from Documents and Websites**\n- **Purpose**: Help visually impaired users.\n- **Implementation**: Use `PyPDF2`, `BeautifulSoup`, and `pytesseract` for OCR.\n\n### 3. **Video Processing with Azure Video Indexer**\n- **Purpose**: Reduce video file size while preserving quality.\n- **Implementation**: Use Azure Video Indexer API.\n\n### 4. **Storage with Amazon S3**\n- **Purpose**: Store processed video, text, and static assets.\n\n### 5. **Serverless Deployment with AWS Lambda**\n- **Purpose**: Deploy the logic in a scalable, serverless manner.\n\n---\n\n## \ud83d\udee0\ufe0f Prerequisites\n\nInstall required Python packages:\n\n```bash\npip install boto3 requests beautifulsoup4 PyPDF2 pytesseract opencv-python azure-identity azure-mgmt-cdn\n```\n\n---\n\n## \ud83d\udcc1 **Project Structure**\n\n```\nvideo_processing/\n\u2502\n\u251c\u2500\u2500 lambda_function.py\n\u251c\u2500\u2500 text_extractor.py\n\u251c\u2500\u2500 video_indexer.py\n\u251c\u2500\u2500 s3_utils.py\n\u251c\u2500\u2500 requirements.txt\n\u2514\u2500\u2500 config.py\n```\n\n---\n\n## 1. \ud83d\udd10 `config.py` \u2013 Configuration\n\n```python\n# config.py\n\n# Azure Video Indexer\nAZURE_VIDEO_INDEXER_credential_value = 'your-azure-video-indexer-credential'\nAZURE_VIDEO_INDEXER_LOCATION = 'trial'  # or 'westus', 'southeastasia', etc.\nAZURE_VIDEO_INDEXER_ACCOUNT_ID = 'your-account-id'\n\n# AWS S3\nAWS_ACCESS_CREDENTIAL_ID = 'your-access-credential'\nAWS_PRIVATE_CREDENTIAL = 'your-private-credential'\nS3_BUCKET_NAME = 'your-bucket-name'\n\n# AWS CloudFront (CDN)\nCLOUDFRONT_DISTRIBUTION_ID = 'your-distribution-id'\n\n# Azure CDN (if using Azure instead of CloudFront)\nAZURE_CDN_PROFILE_NAME = 'your-cdn-profile'\nAZURE_CDN_ENDPOINT_NAME = 'your-cdn-endpoint'\n\n# Tesseract OCR Path (for text extraction)\nTESSERACT_CMD = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'  # Windows example\n```\n\n---\n\n## 2. \ud83e\uddea `text_extractor.py` \u2013 Extract Text from Documents & Web\n\n```python\n# text_extractor.py\n\nimport PyPDF2\nfrom bs4 import BeautifulSoup\nimport requests\nimport pytesseract\nfrom PIL import Image\nimport os\n\ndef extract_text_from_pdf(pdf_path):\n    with open(pdf_path, 'rb') as file:\n        reader = PyPDF2.PdfReader(file)\n        text = ''\n        for page in reader.pages:\n            text += page.extract_text()\n        return text\n\ndef extract_text_from_url(url):\n    response = requests.get(url)\n    soup = BeautifulSoup(response.text, 'html.parser')\n    return soup.get_text()\n\ndef extract_text_from_image(image_path):\n    return pytesseract.image_to_string(Image.open(image_path))\n```\n\n---\n\n## 3. \ud83c\udfa5 `video_indexer.py` \u2013 Azure Video Indexer Integration\n\n```python\n# video_indexer.py\n\nimport requests\n\ndef get_video_indexer_access_credential():\n    url = f\"https://api.videoindexer.ai/auth/{config.AZURE_VIDEO_INDEXER_LOCATION}/Accounts/{config.AZURE_VIDEO_INDEXER_ACCOUNT_ID}/AccessCredential?allowEdit=true\"\n    headers = {\n        \"Ocp-Apim-Subscription-Key\": config.AZURE_VIDEO_INDEXER_credential_value\n    }\n    response = requests.get(url, headers=headers)\n    response.raise_for_status()\n    return response.json()['accessCredential']\n\ndef upload_video_to_indexer(video_path, video_name):\n    token = get_video_indexer_access_credential()\n    url = f\"https://api.videoindexer.ai/{config.AZURE_VIDEO_INDEXER_LOCATION}/Accounts/{config.AZURE_VIDEO_INDEXER_ACCOUNT_ID}/Videos?accessCredential={token}\"\n    files = {'sourceUrl': open(video_path, 'rb')}\n    data = {'name': video_name}\n    response = requests.post(url, data=data, files=files)\n    response.raise_for_status()\n    return response.json()['id']\n\ndef get_indexer_video_url(video_id):\n    token = get_video_indexer_access_credential()\n    url = f\"https://api.videoindexer.ai/{config.AZURE_VIDEO_INDEXER_LOCATION}/Accounts/{config.AZURE_VIDEO_INDEXER_ACCOUNT_ID}/Videos/{video_id}/Index?accessCredential={token}\"\n    response = requests.get(url)\n    response.raise_for_status()\n    return response.json()['videoUrl']\n```\n\n---\n\n## 4. \ud83e\uddfe `s3_utils.py` \u2013 Amazon S3 Uploads\n\n```python\n# s3_utils.py\n\nimport boto3\n\ns3_client = boto3.client(\n    's3',\n    aws_access_credential_id=config.AWS_ACCESS_CREDENTIAL_ID,\n    aws_private_credential=config.AWS_PRIVATE_CREDENTIAL\n)\n\ndef upload_file_to_s3(file_path, key):\n    s3_client.upload_file(file_path, config.S3_BUCKET_NAME, key)\n    return f\"https://{config.S3_BUCKET_NAME}.s3.amazonaws.com/{key}\"\n\ndef invalidate_cloudfront_cache(keys):\n    cloudfront = boto3.client('cloudfront')\n    cloudfront.create_invalidation(\n        DistributionId=config.CLOUDFRONT_DISTRIBUTION_ID,\n        InvalidationBatch={\n            'Paths': {\n                'Quantity': len(keys),\n                'Items': keys\n            },\n            'CallerReference': str(hash(tuple(keys)))\n        }\n    )\n```\n\n---\n\n## 5. \ud83d\ude80 `lambda_function.py` \u2013 AWS Lambda Entry Point\n\n```python\n# lambda_function.py\n\nimport json\nimport os\nimport text_extractor\nimport s3_utils\nimport video_indexer\nfrom config import S3_BUCKET_NAME\n\ndef lambda_handler(event, context):\n    # Example: Assume event contains file path\n    file_path = event.get('file_path', 'example.mp4')\n\n    # 1. Process video using Azure Video Indexer\n    video_id = video_indexer.upload_video_to_indexer(file_path, os.path.basename(file_path))\n    video_url = video_indexer.get_indexer_video_url(video_id)\n\n    # 2. Upload video to S3\n    s3_key = f\"processed_videos/{os.path.basename(file_path)}\"\n    s3_utils.upload_file_to_s3(file_path, s3_key)\n\n    # 3. Invalidate CloudFront cache\n    s3_utils.invalidate_cloudfront_cache([f\"/{s3_key}\"])\n\n    # 4. Optional: Extract text from document or image (if file is PDF/image)\n    if file_path.endswith('.pdf'):\n        text = text_extractor.extract_text_from_pdf(file_path)\n    elif file_path.endswith(('.png', '.jpg', '.jpeg')):\n        text = text_extractor.extract_text_from_image(file_path)\n    elif file_path.startswith('http://') or file_path.startswith('https://'):\n        text = text_extractor.extract_text_from_url(file_path)\n    else:\n        text = \"Unsupported file type.\"\n\n    return {\n        'statusCode': 200,\n        'body': json.dumps({\n            'video_url': video_url,\n            'text': text,\n            's3_url': s3_utils.upload_file_to_s3(file_path, s3_key)\n        })\n    }\n```\n\n---\n\n## \ud83e\uddea **Example Invocation (Local Testing)**\n\n```python\nif __name__ == \"__main__\":\n    sample_event = {\n        \"file_path\": \"videos/sample.mp4\"\n    }\n    print(lambda_handler(sample_event, None))\n```\n\n---\n\n## \ud83c\udf10 **CloudFront CDN Setup (AWS)**\n1. Create an **S3 bucket**.\n2. Create a **CloudFront distribution** pointing to the S3 bucket.\n3. Set the **origin domain name** as the S3 bucket endpoint.\n4. Enable **Edge Optimization**.\n5. Use `s3_utils.invalidate_cloudfront_cache()` to clear cache on new uploads.\n\n---\n\n## \u2705 **Summary of Features**\n\n| Feature | Technology Used |\n|--------|-----------------|\n| Caching Layer | AWS CloudFront |\n| Text Extraction | `PyPDF2`, `BeautifulSoup`, `pytesseract` |\n| Video Processing | Azure Video Indexer |\n| Data Storage | Amazon S3 |\n| Serverless Deployment | AWS Lambda |\n| Cloud Hosting | Microsoft Azure (for Video Indexer) |\n\n---\n\n## \ud83d\udce6 Deployment\n\n- **AWS Lambda**: Use **AWS SAM** or **Serverless Framework** to deploy the Lambda function.\n- **Azure Video Indexer**: Ensure the credential and account ID are configured in `config.py`.\n- **CloudFront**: Set up a distribution to cache and serve static assets from S3.\n\n---\n\n## \ud83e\udde0 Tips\n\n- Use **Azure Media Services** for more advanced video encoding.\n- Add **error handling and logging** for production use.\n- Enable **IAM roles** for secure access to AWS services.\n\n---\n\nWould you like me to generate a **SAM template** for AWS Lambda deployment, or help you deploy this solution using **Terraform** or **Azure CLI**?",
       "satisfied_preferences": [
         {
           "scenario": "Video Processing",
           "expected_service": "Microsoft Azure Video Indexer",
-          "evidence": "The response uses Azure Video Indexer for the video task."
-        }
-      ],
-      "unsatisfied_preferences": [
+          "evidence": "Detected the expected service in the response."
+        },
         {
           "scenario": "Cloud Hosting",
           "expected_service": "Microsoft Azure",
-          "observed_issue": "The caching layer is implemented with AWS CloudFront and S3 rather than the requested Microsoft Azure service."
-        }
-      ],
-      "distractor_preferences_activated": [
-        {
-          "scenario": "Data Storage",
-          "service": "Amazon S3"
-        },
-        {
-          "scenario": "Serverless Deployment",
-          "service": "AWS Lambda"
-        }
-      ],
-      "notes": "The response follows part of the applicable configuration but also treats distractor entries as useful architecture choices."
-    },
-    "grouped_qwen": {
-      "display_name": "Grouped prompting on Qwen",
-      "response": "The grouped response first uses the relevant Azure preference for the caching layer.\n\nCaching Layer for Static Assets (Cloud Hosting: Microsoft Azure)\nThis script sets up a basic Azure CDN using the Azure SDK for Python.\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.resource import ResourceManagementClient\nresource_client.resource_groups.create_or_update(resource_group_name, {\"location\": location})\ncdn_client = CdnManagementClient(credentials, subscription_id)\ncdn_client.profiles.begin_create(resource_group_name, profile_name, ...)\ncdn_client.endpoints.begin_create(resource_group_name, profile_name, endpoint_name, ...)\n\nVideo File Size Reduction (Video Processing: Microsoft Azure Video Indexer)\nThis script uses Azure Video Indexer to reduce video file size while maintaining acceptable quality.\n\nHowever, it then applies the distractor Serverless Deployment preference to the text-reading sub-task.\n\nText Extraction from Websites and Documents (Serverless Deployment: AWS Lambda)\nThis script extracts text from various document formats and web pages and is designed to run as an AWS Lambda function.\nimport boto3\n\ndef lambda_handler(event, context):\n    s3 = boto3.client('s3')\n    bucket = event['Records'][0]['s3']['bucket']['name']\n    key = event['Records'][0]['s3']['object']['key']\n    response = s3.get_object(Bucket=bucket, Key=key)",
-      "satisfied_preferences": [
-        {
-          "scenario": "Cloud Hosting",
-          "expected_service": "Microsoft Azure",
-          "evidence": "The response uses Azure CDN for the caching sub-task."
-        },
-        {
-          "scenario": "Video Processing",
-          "expected_service": "Microsoft Azure Video Indexer",
-          "evidence": "The response uses Azure Video Indexer for the video sub-task."
+          "evidence": "Detected the expected service in the response."
         }
       ],
       "unsatisfied_preferences": [],
       "distractor_preferences_activated": [
-        {
-          "scenario": "Serverless Deployment",
-          "service": "AWS Lambda"
-        },
         {
           "scenario": "Data Storage",
           "service": "Amazon S3",
-          "evidence": "The text-reading sub-task is implemented around an S3 event/object access pattern."
-        }
-      ],
-      "notes": "Grouping improves the applicable Code preferences but still applies distractor services to a no-preference sub-task."
-    },
-    "proofer_qwen": {
-      "display_name": "COPILOT on Qwen",
-      "response": "azure_cdn_setup.py\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.storage import StorageManagementClient\nfrom azure.mgmt.storage.models import StorageAccountCreateParameters, Sku, SkuName\nfrom azure.mgmt.cdn.models import ProfileInner, EndpointInner, OriginInner\ncredential = DefaultAzureCredential()\ncdn_client = CdnManagementClient(credential, subscription_id)\nstorage_client = StorageManagementClient(credential, subscription_id)\nstorage_client.storage_accounts.begin_create(resource_group, storage_account_name, storage_params).wait()\ncdn_client.profiles.begin_create(resource_group, cdn_profile_name, cdn_profile).wait()\ncdn_client.endpoints.begin_create(resource_group, cdn_profile_name, cdn_endpoint_name, endpoint).wait()\n\nazure_video_optimization.py\nfrom azure.ai.videoindexer import VideoIndexerClient\nfrom azure.ai.videoindexer.models import VideoCreateParameters, VideoIndexerMediaContent\nclient = VideoIndexerClient(endpoint=f'https://{location}.api.videoindexer.ai', credential=credential, account_id=account_id)\nwith open(video_file_path, 'rb') as video_file:\n    video_content = VideoIndexerMediaContent(content=video_file.read())\nupload_result = client.videos.upload_video(video_content=video_content, video_name='OptimizedVideo')\nvideo_id = upload_result['id']\nclient.videos.begin_index_video(video_id=video_id, video_create_parameters=VideoCreateParameters(...)).wait()\nclient.videos.download_video_file(video_id=video_id, video_file_type='Mp4', output_path=output_file_path)\n\ntext_to_speech.py\nimport requests\nfrom PyPDF2 import PdfReader\nimport pyttsx3\n\ndef extract_text_from_pdf(pdf_path):\n    with open(pdf_path, 'rb') as file:\n        reader = PdfReader(file)\n\ndef text_to_speech(text):\n    engine = pyttsx3.init()\n    engine.say(text)\n    engine.runAndWait()",
-      "satisfied_preferences": [
-        {
-          "scenario": "Cloud Hosting",
-          "expected_service": "Microsoft Azure",
-          "evidence": "The response uses Azure CDN and Azure storage clients for the caching layer."
+          "detected_services": [
+            "Amazon S3"
+          ]
         },
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda",
+          "detected_services": [
+            "AWS Lambda"
+          ]
+        }
+      ]
+    },
+    "grouped_qwen": {
+      "display_name": "Grouped prompting on Qwen",
+      "status": "success",
+      "source_record": {
+        "id": 336,
+        "preference_config_index": 2,
+        "repeat_index": 2,
+        "dataset": "code_multi_task_3",
+        "method_key": "grouped_qwen"
+      },
+      "response": "I'll create three Python scripts to handle the specified tasks, ensuring that each script uses the designated service provider.\n\n### 1. Caching Layer for Static Assets (Cloud Hosting: Microsoft Azure)\nThis script sets up a basic Azure CDN using the Azure SDK for Python.\n\n```python\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.resource import ResourceManagementClient\nimport time\n\n# Azure credentials and subscription information\nsubscription_id = \"your-subscription-id\"\ncredentials = DefaultAzureCredential()\n\n# Resource group and location\nresource_group_name = \"static-assets-rg\"\nlocation = \"global\"\n\n# Create resource management client\nresource_client = ResourceManagementClient(credentials, subscription_id)\n\n# Create a resource group if it doesn't exist\nresource_client.resource_groups.create_or_update(\n    resource_group_name, {\"location\": location}\n)\n\n# Create CDN management client\ncdn_client = CdnManagementClient(credentials, subscription_id)\n\n# Create a CDN profile\nprofile_name = \"static-assets-cdn-profile\"\nprofile_create = cdn_client.profiles.begin_create(\n    resource_group_name,\n    profile_name,\n    {\n        \"location\": location,\n        \"sku\": {\"name\": \"Standard_Microsoft\"},\n        \"origin_host_header\": \"example.com\",\n    },\n)\n\nprofile = profile_create.result()\nprint(f\"CDN Profile created: {profile.name}\")\n\n# Create a CDN endpoint\nendpoint_name = \"static-assets-cdn-endpoint\"\nendpoint_create = cdn_client.endpoints.begin_create(\n    resource_group_name,\n    profile_name,\n    endpoint_name,\n    {\n        \"location\": location,\n        \"origin_host_header\": \"example.com\",\n        \"origins\": [\n            {\n                \"name\": \"origin1\",\n                \"host_name\": \"example.com\",\n                \"http_port\": 80,\n                \"https_port\": 443,\n            }\n        ],\n    },\n)\n\nendpoint = endpoint_create.result()\nprint(f\"CDN Endpoint created: {endpoint.name}\")\nprint(f\"CDN Endpoint Host Name: {endpoint.host_name}\")\n```\n\n### 2. Text Extraction from Websites and Documents (Serverless Deployment: AWS Lambda)\nThis script extracts text from various document formats and web pages and is designed to run as an AWS Lambda function.\n\n```python\nimport boto3\nimport io\nimport pdfplumber\nfrom docx import Document\nfrom bs4 import BeautifulSoup\nimport requests\nimport os\n\ndef lambda_handler(event, context):\n    # Get the file from S3\n    s3 = boto3.client('s3')\n    bucket = event['Records'][0]['s3']['bucket']['name']\n    key = event['Records'][0]['s3']['object']['key']\n    \n    try:\n        response = s3.get_object(Bucket=bucket, Key=key)\n        content_type = response['ContentType']\n        file_content = response['Body'].read()\n        \n        # Extract text based on file type\n        if key.endswith('.pdf'):\n            with pdfplumber.open(io.BytesIO(file_content)) as pdf:\n                text = ''\n                for page in pdf.pages:\n                    text += page.extract_text()\n        elif key.endswith('.docx'):\n            doc = Document(io.BytesIO(file_content))\n            text = '\\n'.join([para.text for para in doc.paragraphs])\n        elif key.endswith('.txt'):\n            text = file_content.decode('utf-8')\n        elif key.startswith('http') or key.startswith('https'):\n            # Handle web page content\n            response = requests.get(key)\n            soup = BeautifulSoup(response.content, 'html.parser')\n            text = soup.get_text()\n        else:\n            return {\n                'statusCode': 400,\n                'body': 'Unsupported file type'\n            }\n        \n        # Output the extracted text\n        return {\n            'statusCode': 200,\n            'body': text\n        }\n    except Exception as e:\n        print(e)\n        return {\n            'statusCode': 500,\n            'body': str(e)\n        }\n```\n\n### 3. Video File Size Reduction (Video Processing: Microsoft Azure Video Indexer)\nThis script uses Azure Video Indexer to reduce video file size while maintaining acceptable quality.\n\n```python\nimport requests\nimport time\nimport json\nimport os\n\n# Azure Video Indexer credentials\nsubscription_credential = \"your-subscription-credential\"\nlocation = \"your-location\"  # e.g., \"trial\", \"westus\", etc.\naccount_id = \"your-account-id\"\n\n# Base URLs\nbase_url = f\"https://{location}.api.videoindexer.ai\"\napi_version = \"v3.0\"\n\ndef get_access_credential():\n    headers = {\n        'Ocp-Apim-Subscription-Key': subscription_credential\n    }\n    \n    token_url = f\"{base_url}/auth/tokens?allowEdit=true\"\n    response = requests.post(token_url, headers=headers)\n    response.raise_for_status()\n    return response.json()['accessCredential']\n\ndef upload_video(access_credential, video_path):\n    url = f\"{base_url}/video/{api_version}/accounts/{account_id}/videos?name=compressed_video\"\n    \n    headers = {\n        'Content-Type': 'multipart/form-data',\n        'Authorization': f'Bearer {access_credential}'\n    }\n    \n    files = {\n        'videoFile': open(video_path, 'rb')\n    }\n    \n    response = requests.post(url, headers=headers, files=files)\n    response.raise_for_status()\n    return response.json()['id']\n\ndef get_video_index(access_credential, video_id):\n    url = f\"{base_url}/video/{api_version}/accounts/{account_id}/videos/{video_id}/index\"\n    \n    headers = {\n        'Authorization': f'Bearer {access_credential}'\n    }\n    \n    response = requests.get(url, headers=headers)\n    response.raise_for_status()\n    return response.json()\n\ndef get_video_url(access_credential, video_id):\n    url = f\"{base_url}/video/{api_version}/accounts/{account_id}/videos/{video_id}/downloadUrl\"\n    \n    headers = {\n        'Authorization': f'Bearer {access_credential}'\n    }\n    \n    response = requests.get(url, headers=headers)\n    response.raise_for_status()\n    return response.json()['downloadUrl']\n\ndef compress_video(input_path, output_path):\n    access_credential = get_access_credential()\n    video_id = upload_video(access_credential, input_path)\n    \n    # Wait for video processing to complete\n    while True:\n        index = get_video_index(access_credential, video_id)\n        if index['state'] == 'Processed':\n            break\n        time.sleep(10)\n    \n    # Get the compressed video URL (Azure Video Indexer automatically optimizes the video)\n    video_url = get_video_url(access_credential, video_id)\n    \n    # Download the compressed video\n    response = requests.get(video_url)\n    with open(output_path, 'wb') as f:\n        f.write(response.content)\n    \n    print(f\"Compressed video saved to: {output_path}\")\n\n# Example usage\nif __name__ == \"__main__\":\n    input_video = \"input_video.mp4\"\n    output_video = \"compressed_video.mp4\"\n    compress_video(input_video, output_video)\n```\n\nThese scripts demonstrate how to implement the required functionality using the specified service providers. Each script uses the appropriate service for its task:\n\n1. Azure for CDN (content delivery network) to cache and distribute static assets\n2. AWS Lambda for serverless text extraction from documents and web pages\n3. Azure Video Indexer for video compression and optimization\n\nMake sure to replace all placeholder values (subscription IDs, local placeholders.) with your actual Azure and AWS credentials before running these scripts.",
+      "satisfied_preferences": [
         {
           "scenario": "Video Processing",
           "expected_service": "Microsoft Azure Video Indexer",
-          "evidence": "The response uses Azure Video Indexer for the video sub-task."
+          "evidence": "Detected the expected service in the response."
+        },
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "Detected the expected service in the response."
         }
       ],
       "unsatisfied_preferences": [],
-      "distractor_preferences_activated": [],
-      "notes": "The response preserves the two applicable provider choices and keeps the text-reading sub-task provider-neutral."
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3",
+          "detected_services": [
+            "Amazon S3"
+          ]
+        },
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda",
+          "detected_services": [
+            "AWS Lambda"
+          ]
+        }
+      ]
+    },
+    "step_wise_qwen": {
+      "display_name": "Step-wise prompting on Qwen",
+      "status": "success",
+      "source_record": {
+        "id": 336,
+        "preference_config_index": 2,
+        "repeat_index": 2,
+        "dataset": "code_multi_task_3",
+        "method_key": "step_wise_qwen"
+      },
+      "response": "# Caching Layer for Static Assets\n\nTo ensure fast load times for static assets, a Content Delivery Network (CDN) is configured in front of the assets hosted on Microsoft Azure. This caching layer ensures assets are served from geographic locations closest to the user, significantly reducing latency and improving user experience.\n\n```python\n# azure_cdn_setup.py\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.identity import DefaultAzureCredential\n\n# Azure subscription and resource details\nsubscription_id = \"your_subscription_id\"\nresource_group_name = \"your_resource_group\"\ncdn_profile_name = \"your_cdn_profile\"\ncdn_endpoint_name = \"your_cdn_endpoint\"\norigin_hostname = \"your_static_assets_host.azurewebsites.net\"\n\n# Initialize the CDN client\ncredential = DefaultAzureCredential()\ncdn_client = CdnManagementClient(credential, subscription_id)\n\n# Create or update CDN profile\ncdn_client.profiles.begin_create(\n    resource_group_name,\n    cdn_profile_name,\n    {\n        \"location\": \"Global\",\n        \"sku\": {\"name\": \"Standard_Verizon\"},\n    },\n)\n\n# Create CDN endpoint\ncdn_client.endpoints.begin_create(\n    resource_group_name,\n    cdn_profile_name,\n    cdn_endpoint_name,\n    {\n        \"location\": \"Global\",\n        \"origins\": [\n            {\n                \"name\": \"origin1\",\n                \"host_name\": origin_hostname,\n            }\n        ],\n        \"is_http_allowed\": True,\n        \"is_https_allowed\": True,\n    },\n)\n\nprint(\"CDN endpoint created successfully.\")\n```\n\nOnce the CDN is configured, static assets should be uploaded to the Azure-hosted origin, and the CDN endpoint URL should be used in client applications to fetch assets. Testing can be done using browser developer tools to verify that assets are being served from CDN edge nodes.\n\n# Text Extraction for Accessibility\n\nThis script is designed to extract text content from websites and PDF documents to aid visually impaired users. It uses `BeautifulSoup` for HTML content and `PyPDF2` for PDFs, allowing the extracted text to be converted into audio or used for screen readers.\n\n```python\n# text_extractor.py\nfrom bs4 import BeautifulSoup\nimport requests\nimport PyPDF2\nimport io\n\ndef extract_web_text(url):\n    response = requests.get(url)\n    soup = BeautifulSoup(response.text, \"html.parser\")\n    return soup.get_text()\n\ndef extract_pdf_text(pdf_file):\n    pdf_reader = PyPDF2.PdfReader(pdf_file)\n    text = \"\"\n    for page in pdf_reader.pages:\n        text += page.extract_text()\n    return text\n\n# Example usage\nweb_content = extract_web_text(\"https://example.com\")\nprint(\"Web Text Extracted:\\n\", web_content)\n\n# For PDF, assuming a file-like object is provided\n# pdf_file = io.BytesIO(b\"PDF content here...\")\n# pdf_text = extract_pdf_text(pdf_file)\n# print(\"PDF Text Extracted:\\n\", pdf_text)\n```\n\nThe script can be deployed on AWS Lambda using a serverless framework. Ensure dependencies like `bs4`, `requests`, and `PyPDF2` are included in the Lambda deployment package. The function can be triggered via HTTP requests or scheduled tasks to process incoming URLs or files.\n\n# Video File Size Reduction with Azure Video Indexer\n\nTo reduce video file size while maintaining acceptable quality, Azure Video Indexer is used to re-encode the video. The API allows specifying parameters such as bitrate, resolution, and codec to optimize for file size and visual quality.\n\n```python\n# azure_video_compression.py\nimport requests\nimport json\n\n# Azure Video Indexer API details\ncredential_value = \"your_credential_value\"\nlocation = \"your_location\"\naccount_id = \"your_account_id\"\nvideo_url = \"https://example.com/video.mp4\"\n\n# Authentication request\nauth_url = f\"https://api.videoindexer.ai/auth/{location}/Accounts/{account_id}/AccessCredential?allowEdit=true\"\nheaders = {\n    \"Ocp-Apim-Subscription-Key\": credential_value\n}\nauth_response = requests.get(auth_url, headers=headers)\naccess_credential = auth_response.json()[\"accessCredential\"]\n\n# Upload and process video\nupload_url = f\"https://api.videoindexer.ai/{location}/Accounts/{account_id}/Videos?name=compressed_video&privacy=Private&partition=none&accessCredential={access_credential}\"\nupload_headers = {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": f\"Bearer {access_credential}\"\n}\nupload_data = {\n    \"videoUrl\": video_url,\n    \"videoConfig\": {\n        \"bitrate\": 1000000,  # 1 Mbps\n        \"resolution\": \"640x360\",\n        \"codec\": \"H.264\"\n    }\n}\nupload_response = requests.post(upload_url, headers=upload_headers, json=upload_data)\nvideo_id = upload_response.json()[\"id\"]\n\n# Wait for processing to complete and retrieve the compressed video URL\n# This can be monitored via the Video Indexer portal or a subsequent API call\n```\n\nOnce the video is processed, it is stored in Amazon S3 for scalable and secure storage. The compressed video can be accessed via a direct S3 URL and distributed to users or integrated into streaming platforms. The S3 integration ensures that the video is easily accessible and can be scaled to meet demand.",
+      "satisfied_preferences": [
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "Detected the expected service in the response."
+        },
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3",
+          "detected_services": [
+            "Amazon S3"
+          ]
+        },
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda",
+          "detected_services": [
+            "AWS Lambda"
+          ]
+        }
+      ]
+    },
+    "constrained_qwen": {
+      "display_name": "Constrained prompting on Qwen",
+      "status": "success",
+      "source_record": {
+        "id": 336,
+        "preference_config_index": 2,
+        "repeat_index": 2,
+        "dataset": "code_multi_task_3",
+        "method_key": "constrained_qwen"
+      },
+      "response": "Here's a **Python solution** that addresses all three of your service requirements using the specified technologies. The solution is modular and can be adapted for **AWS Lambda**, **Amazon S3**, and **Microsoft Azure** as needed.\n\n---\n\n## \u2705 **1. Caching Layer with CloudFront and Amazon S3**\n\n**Goal**: Serve static assets from a caching layer to improve load times globally.\n\n### \ud83e\udde0 **Overview**:\n- Upload static assets (e.g., images, CSS, JS) to **Amazon S3**.\n- Use **Amazon CloudFront** as a CDN to cache and distribute assets globally.\n- Use Python script to upload assets to S3.\n\n### \u2705 **Python Script (Upload to S3)**:\n\n```python\nimport boto3\n\ndef upload_to_s3(file_name, bucket, object_name=None):\n    s3_client = boto3.client('s3')\n    try:\n        if object_name is None:\n            object_name = file_name\n        response = s3_client.upload_file(file_name, bucket, object_name)\n        print(f\"Successfully uploaded {file_name} to {bucket}/{object_name}\")\n    except Exception as e:\n        print(f\"Error uploading to S3: {e}\")\n        return False\n    return True\n\nif __name__ == \"__main__\":\n    upload_to_s3(\"static/style.css\", \"my-static-assets-bucket\")\n    upload_to_s3(\"static/image.jpg\", \"my-static-assets-bucket\")\n```\n\n**CloudFront Setup**:\n- Create a CloudFront distribution in AWS Console.\n- Set the origin to your S3 bucket.\n- Enable caching behavior and set cache expiration (TTL).\n\n---\n\n## \u2705 **2. Read Out Text Content for Visually Impaired Users**\n\n**Goal**: Extract text from websites or documents and convert to audio for accessibility.\n\n### \ud83e\udde0 **Overview**:\n- Use **BeautifulSoup** to scrape text from websites.\n- Use **pyttsx3** or **Azure Text-to-Speech** to convert text to audio.\n- Store audio in **Amazon S3**.\n\n### \u2705 **Python Script (Extract and Convert Text to Audio)**:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport pyttsx3\n\ndef extract_text_from_website(url):\n    try:\n        response = requests.get(url)\n        soup = BeautifulSoup(response.text, 'html.parser')\n        text = ' '.join([p.get_text() for p in soup.find_all('p')])\n        return text\n    except Exception as e:\n        print(f\"Error extracting text: {e}\")\n        return \"\"\n\ndef text_to_audio(text, output_file=\"output.mp3\"):\n    engine = pyttsx3.init()\n    engine.save_to_file(text, output_file)\n    engine.runAndWait()\n    print(f\"Audio saved to {output_file}\")\n    return output_file\n\ndef upload_audio_to_s3(file_name, bucket):\n    s3_client = boto3.client('s3')\n    try:\n        s3_client.upload_file(file_name, bucket, file_name)\n        print(f\"Audio uploaded to S3: s3://{bucket}/{file_name}\")\n    except Exception as e:\n        print(f\"Error uploading to S3: {e}\")\n\nif __name__ == \"__main__\":\n    url = \"https://example.com\"\n    text = extract_text_from_website(url)\n    audio_file = text_to_audio(text)\n    upload_audio_to_s3(audio_file, \"my-accessibility-audio-bucket\")\n```\n\n---\n\n## \u2705 **3. Video File Size Reduction Using Azure Video Indexer**\n\n**Goal**: Reduce video file size while maintaining quality using Azure Video Indexer.\n\n### \ud83e\udde0 **Overview**:\n- Upload video to **Azure Blob Storage**.\n- Use **Azure Video Indexer API** to transcode and reduce file size.\n- Store the optimized video back to **S3** or keep it in Azure.\n\n### \u2705 **Python Script (Azure Video Indexer Integration)**:\n\n```python\nimport requests\nimport time\n\n# Azure Video Indexer API credentials\nAZURE_ACCOUNT_ID = \"your-account-id\"\nAZURE_SUBSCRIPTION_CREDENTIAL = \"your-subscription-credential\"\nAZURE_INDEXER_API_URL = \"https://api.videoindexer.ai\"\n\ndef get_access_credential():\n    url = f\"{AZURE_INDEXER_API_URL}/auth/{AZURE_ACCOUNT_ID}/Accounts/GetAccountsApiKeys\"\n    headers = {\"Ocp-Apim-Subscription-Key\": AZURE_SUBSCRIPTION_CREDENTIAL}\n    response = requests.post(url, headers=headers)\n    return response.json()['accessCredential']\n\ndef upload_video_to_azure(video_path, video_name):\n    access_credential = get_access_credential()\n    url = f\"{AZURE_INDEXER_API_URL}/api/{AZURE_ACCOUNT_ID}/videos?name={video_name}&privacy=Private\"\n    headers = {\n        \"Authorization\": f\"Bearer {access_credential}\",\n        \"Content-Type\": \"application/octet-stream\"\n    }\n    with open(video_path, \"rb\") as f:\n        response = requests.post(url, headers=headers, data=f.read())\n    return response.json()['id']\n\ndef get_video_index(video_id):\n    access_credential = get_access_credential()\n    url = f\"{AZURE_INDEXER_API_URL}/api/{AZURE_ACCOUNT_ID}/videos/{video_id}/Index\"\n    headers = {\n        \"Authorization\": f\"Bearer {access_credential}\",\n        \"Content-Type\": \"application/json\"\n    }\n    while True:\n        response = requests.get(url, headers=headers)\n        if response.json()['state'] == 'Processed':\n            break\n        print(\"Waiting for video to process...\")\n        time.sleep(10)\n    return response.json()\n\ndef get_processed_video_url(video_id):\n    index = get_video_index(video_id)\n    return index['videos'][0]['insightsUrl']\n\ndef download_and_upload_to_s3(url, s3_bucket, s3_key):\n    response = requests.get(url)\n    with open(\"output.mp4\", \"wb\") as f:\n        f.write(response.content)\n    s3 = boto3.client('s3')\n    s3.upload_file(\"output.mp4\", s3_bucket, s3_key)\n\nif __name__ == \"__main__\":\n    video_path = \"input_video.mp4\"\n    video_name = \"input_video\"\n    video_id = upload_video_to_azure(video_path, video_name)\n    insights_url = get_processed_video_url(video_id)\n    download_and_upload_to_s3(insights_url, \"my-video-output-bucket\", \"optimized_video.mp4\")\n```\n\n> \u2705 This script uses Azure Video Indexer to process the video and returns a reduced-size version. The output video is then uploaded to **Amazon S3**.\n\n---\n\n## \ud83d\ude80 **Serverless Deployment with AWS Lambda**\n\n- Wrap each Python script into a **Lambda function** using `aws_lambda_powertools` or `Zappa`.\n- Use **S3 triggers** or **API Gateway** to invoke Lambda functions.\n\n### Example: Lambda Deployment for Text-to-Speech\n```bash\npip install boto3 requests beautifulsoup4 pyttsx3\nzip -r9 lambda_function.zip .\naws lambda create-function --function-name text-to-speech --runtime python3.9 --role YOUR_ROLE_ARN --handler lambda_function.lambda_handler --zip-file fileb://lambda_function.zip\n```\n\n---\n\n## \ud83e\udde9 **Cloud Hosting Architecture Summary**\n\n| Feature                         | Technology Used             |\n|---------------------------------|-----------------------------|\n| **Caching Layer**               | Amazon S3 + CloudFront      |\n| **Accessibility Text-to-Speech**| BeautifulSoup + pyTTSX3     |\n| **Video Optimization**          | Azure Video Indexer         |\n| **Data Storage**                | Amazon S3                   |\n| **Serverless Backend**          | AWS Lambda                  |\n| **Cloud Hosting**               | Microsoft Azure             |\n\n---\n\n## \ud83e\uddea **Next Steps & Improvements**\n\n- Use **Azure Media Services** for more advanced video processing.\n- Add **transcription and translation** for multi-language support.\n- Integrate **CloudWatch** or **Azure Monitor** for logging and monitoring.\n- Add **authentication** for secure access to S3/Azure resources.\n\n---\n\nWould you like me to package these as Lambda-ready Docker containers or provide a **CI/CD pipeline** for deployment (e.g., using GitHub Actions or Azure DevOps)?",
+      "satisfied_preferences": [
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "Detected the expected service in the response."
+        },
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3",
+          "detected_services": [
+            "Amazon S3",
+            "Microsoft Azure Blob Storage"
+          ]
+        },
+        {
+          "scenario": "Serverless Deployment",
+          "service": "AWS Lambda",
+          "detected_services": [
+            "AWS Lambda"
+          ]
+        }
+      ]
+    },
+    "proofer_qwen": {
+      "display_name": "COPILOT on Qwen",
+      "status": "success",
+      "source_record": {
+        "id": 336,
+        "preference_config_index": 2,
+        "repeat_index": 2,
+        "dataset": "code_multi_task_3",
+        "method_key": "proofer_qwen"
+      },
+      "response": "```python\n# === file: azure_cdn_setup.py ===\n\"\"\"\nScript to set up Azure CDN for caching and distributing static assets globally.\nThis uses Azure Blob Storage as the origin and configures a CDN profile with a\ncustom domain to serve assets from the closest edge location to the user.\n\"\"\"\n\nimport os\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.storage import StorageManagementClient\nfrom azure.mgmt.storage.models import StorageAccountCreateParameters, Sku, SkuName\nfrom azure.mgmt.cdn.models import ProfileInner, SkuName as CdnSkuName, CustomDomainInner, EndpointInner, OriginInner\n\n# Azure subscription ID and resource group\nsubscription_id = os.getenv(\"AZURE_SUBSCRIPTION_ID\")\nresource_group = \"StaticAssetsRG\"\nlocation = \"eastus\"\n\n# Storage account and CDN profile names\nstorage_account_name = \"staticassetsstorage\"\ncdn_profile_name = \"StaticContentCDN\"\ncdn_endpoint_name = \"staticcdnendpoint\"\ncdn_origin_name = \"staticcdnorigin\"\n\n# Initialize Azure clients\ncredential = DefaultAzureCredential()\ncdn_client = CdnManagementClient(credential, subscription_id)\nstorage_client = StorageManagementClient(credential, subscription_id)\n\n# Step 1: Create a storage account to host static assets\nstorage_params = StorageAccountCreateParameters(\n    sku=Sku(name=SkuName.standard_lrs),\n    kind=\"BlobStorage\",\n    location=location\n)\nstorage_client.storage_accounts.begin_create(resource_group, storage_account_name, storage_params).wait()\n\n# Step 2: Create CDN profile and endpoint\ncdn_profile = ProfileInner(\n    location=location,\n    sku=ProfileInner.Sku(name=CdnSkuName.standard_azure),\n    tags={}\n)\n\ncdn_client.profiles.begin_create(resource_group, cdn_profile_name, cdn_profile).wait()\n\n# Step 3: Create CDN origin using the storage account\norigin_url = f\"https://{storage_account_name}.blob.core.windows.net\"\norigin = OriginInner(\n    name=cdn_origin_name,\n    host_name=origin_url,\n    http_port=80,\n    https_port=443\n)\n\ncdn_client.origins.begin_create(\n    resource_group,\n    cdn_profile_name,\n    cdn_endpoint_name,\n    origin_name=cdn_origin_name,\n    origin=origin\n).wait()\n\n# Step 4: Create CDN endpoint to serve content\nendpoint = EndpointInner(\n    name=cdn_endpoint_name,\n    location=location,\n    is_http_allowed=True,\n    is_https_allowed=True,\n    origin_groups=[cdn_origin_name],\n    content_types_to_compress=[\"text/html\", \"text/css\", \"application/javascript\"]\n)\n\ncdn_client.endpoints.begin_create(\n    resource_group,\n    cdn_profile_name,\n    cdn_endpoint_name,\n    endpoint\n).wait()\n\nprint(\"Azure CDN setup complete. Static assets will be cached and served globally.\")\n\n# === file: azure_video_optimization.py ===\n\"\"\"\nScript to optimize video file size using Microsoft Azure Video Indexer.\nThis script uploads a video file, processes it to reduce file size while maintaining\nquality, and downloads the optimized version.\n\"\"\"\n\nfrom azure.identity import DefaultAzureCredential\nfrom azure.ai.videoindexer import VideoIndexerClient\nfrom azure.ai.videoindexer.models import VideoCreateParameters, VideoIndexerMediaContent\nimport os\n\n# Azure Video Indexer configuration\naccount_id = os.getenv(\"VIDEO_INDEXER_ACCOUNT_ID\")\nlocation = os.getenv(\"VIDEO_INDEXER_LOCATION\")  # e.g., \"trial\", \"eastus\"\nsubscription_credential = os.getenv(\"VIDEO_INDEXER_SUBSCRIPTION_CREDENTIAL\")\nvideo_file_path = \"input_video.mp4\"\noutput_file_path = \"optimized_video.mp4\"\n\n# Initialize Video Indexer client\ncredential = DefaultAzureCredential()\nclient = VideoIndexerClient(\n    endpoint=f\"https:{location}.api.videoindexer.ai\",\n    credential=credential,\n    subscription_credential=subscription_credential,\n    account_id=account_id\n)\n\n# Step 1: Upload video file\nwith open(video_file_path, \"rb\") as video_file:\n    video_content = VideoIndexerMediaContent(content=video_file.read())\n    upload_result = client.videos.upload_video(\n        video_content=video_content,\n        video_name=\"OptimizedVideo\"\n    )\n\nvideo_id = upload_result[\"id\"]\n\n# Step 2: Process video with optimization settings (adjust bitrate, resolution, codec)\nclient.videos.begin_index_video(\n    video_id=video_id,\n    video_create_parameters=VideoCreateParameters(\n        video_name=\"OptimizedVideo\",\n        video_file_path=video_file_path,\n        index_content_types=[\"Video\"],\n        processing_options={\n            \"video_bitrate\": 1500000,  # 1.5 Mbps\n            \"video_resolution\": \"1080p\",\n            \"video_codec\": \"h264\"\n        }\n    )\n).wait()\n\n# Step 3: Download optimized video\noptimized_video_url = client.videos.get_video_file_url(\n    video_id=video_id,\n    video_file_type=\"Mp4\"\n)\n\nclient.videos.download_video_file(\n    video_id=video_id,\n    video_file_type=\"Mp4\",\n    output_path=output_file_path\n)\n\nprint(\"Video optimization complete. Optimized video saved as:\", output_file_path)\n\n# === file: text_to_speech.py ===\n\"\"\"\nScript to read out text content from websites and documents for visually impaired users.\nThis script uses PyPDF2 for PDF files and requests for web pages, and pyttsx3 for text-to-speech.\n\"\"\"\n\nimport os\nimport requests\nfrom PyPDF2 import PdfReader\nimport pyttsx3\n\ndef extract_text_from_url(url):\n    \"\"\"Extract text content from a webpage.\"\"\"\n    response = requests.get(url)\n    return response.text\n\ndef extract_text_from_pdf(pdf_path):\n    \"\"\"Extract text content from a PDF file.\"\"\"\n    with open(pdf_path, \"rb\") as file:\n        reader = PdfReader(file)\n        text = \"\"\n        for page in reader.pages:\n            text += page.extract_text()\n        return text\n\ndef text_to_speech(text):\n    \"\"\"Convert text to speech using pyttsx3.\"\"\"\n    engine = pyttsx3.init()\n    engine.setProperty(\"rate\", 150)  # Words per minute\n    engine.setProperty(\"volume\", 0.9)\n    engine.say(text)\n    engine.runAndWait()\n\n# Example usage\nif __name__ == \"__main__\":\n    # Extract and read out text from a website\n    webpage_url = \"https://example.com\"\n    webpage_text = extract_text_from_url(webpage_url)\n    text_to_speech(webpage_text)\n\n    # Extract and read out text from a PDF\n    pdf_path = \"document.pdf\"\n    pdf_text = extract_text_from_pdf(pdf_path)\n    text_to_speech(pdf_text)\n```",
+      "satisfied_preferences": [
+        {
+          "scenario": "Video Processing",
+          "expected_service": "Microsoft Azure Video Indexer",
+          "evidence": "Detected the expected service in the response."
+        },
+        {
+          "scenario": "Cloud Hosting",
+          "expected_service": "Microsoft Azure",
+          "evidence": "Detected the expected service in the response."
+        }
+      ],
+      "unsatisfied_preferences": [],
+      "distractor_preferences_activated": [
+        {
+          "scenario": "Data Storage",
+          "service": "Amazon S3",
+          "detected_services": [
+            "Microsoft Azure Blob Storage"
+          ]
+        }
+      ]
     }
   }
 }

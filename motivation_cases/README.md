@@ -13,7 +13,9 @@ Files:
 - `motivation_case_01.md`: a compact example contrasting a preference-leaking
   response with a preference-controlled response.
 
-The JSON files contain one selected generation per method. They are not
-repeated-run logs. Each file records the original prompt, the active preference
-configuration, the response excerpt used for the case study, and which
-preferences are satisfied, missed, or incorrectly activated as distractors.
+The JSON files contain aligned qualitative outputs for the selected prompt,
+preference configuration, and repeat key. They are not repeated-run logs. Each
+file records the original prompt, the active preference configuration, each
+available main method output, and which preferences are satisfied, missed, or
+incorrectly activated as distractors. If a method is unavailable for a selected
+key, the entry should state `status` and `reason` rather than being omitted.

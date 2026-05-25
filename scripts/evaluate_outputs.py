@@ -13,6 +13,7 @@ ARTIFACT_ROOT = Path(__file__).resolve().parents[1]
 if str(ARTIFACT_ROOT) not in sys.path:
     sys.path.insert(0, str(ARTIFACT_ROOT))
 
+from pipeline.config import domain_resources, load_config  # noqa: E402
 from pipeline.evaluation import evaluate_records, iter_jsonl, read_json  # noqa: E402
 
 
@@ -33,15 +34,20 @@ def resolve_output(path: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="outputs/demo_outputs.jsonl")
-    parser.add_argument("--config", default="configs/eval.yaml", help="Accepted for interface compatibility.")
+    parser.add_argument("--config", default="configs/eval.yaml")
+    parser.add_argument("--domain", choices=["default", "code", "text"], default="default")
     parser.add_argument("--service-keywords", default="configs/service_keywords.template.json")
     parser.add_argument("--provider-to-service", default="configs/provider_to_service.template.json")
     parser.add_argument("--output", default="outputs/demo_metrics.json")
     args = parser.parse_args()
 
     input_path = resolve_input(args.input)
-    keyword_path = resolve_input(args.service_keywords)
-    provider_path = resolve_input(args.provider_to_service)
+    cfg = load_config(resolve_input(args.config))
+    resources = domain_resources(cfg, args.domain)
+    keyword_arg = resources.get("service_keywords") if args.service_keywords == parser.get_default("service_keywords") else args.service_keywords
+    provider_arg = resources.get("provider_to_service") if args.provider_to_service == parser.get_default("provider_to_service") else args.provider_to_service
+    keyword_path = resolve_input(keyword_arg or args.service_keywords)
+    provider_path = resolve_input(provider_arg or args.provider_to_service)
     output_path = resolve_output(args.output)
     records = list(iter_jsonl(input_path))
     metrics = evaluate_records(

@@ -1,6 +1,7 @@
-# Example generation config for the public artifact.
+# Example no-model config for the public artifact smoke test.
 input_path: dataset/examples.jsonl
 output_path: outputs/demo_outputs.jsonl
+domain: default
 
 method:
   task_planning_allowed_categories_source: preference_config

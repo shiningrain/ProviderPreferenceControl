@@ -1,0 +1,67 @@
+# Template for running the real COPILOT pipeline.
+# Model weights are not included in this release. Fill paths locally.
+
+input_path: dataset/code/multi_task_3.jsonl
+output_path: outputs/copilot_code_m3.jsonl
+domain: code
+
+method:
+  task_planning_allowed_categories_source: preference_config
+  task_planning_use_descriptions: true
+  force_python_scripts_output: true
+  dlm_only_for_preference_tasks: true
+  completion_repair_max_rounds: 1
+  fallback_to_config_planner: false
+
+generation:
+  repeat_times: 1
+  start_line: 1
+  end_line:
+  max_new_tokens: 2048
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 50
+  planner_max_new_tokens: 512
+  planner_temperature: 0.0
+  dlm_gen_length: 128
+  dlm_step: 64
+  dlm_constraint_gap: 8
+
+models:
+  planner:
+    # Use "local" or "api". If reuse_target is true and model_path is empty,
+    # task planning reuses the target completion model.
+    kind: local
+    model_path:
+    reuse_target: true
+    device_map: auto
+    torch_dtype: auto
+    trust_remote_code: true
+  dlm:
+    # Local LLaDA-style checkpoint used for constrained draft generation.
+    kind: llada
+    model_path: /path/to/LLaDA-1.5
+    mask_id: 126336
+    torch_dtype: bfloat16
+    trust_remote_code: true
+  target:
+    # Target completion LLM. This can be Qwen, Gemma, or another compatible LM.
+    kind: local
+    model_path: /path/to/target-llm
+    device_map: auto
+    torch_dtype: auto
+    trust_remote_code: true
+  api:
+    # Used only when planner.kind or target.kind is "api".
+    base_url: https://api.example.com/v1
+    model: provider-model-name
+    credential_env: PROVIDER_KEY
+    timeout_seconds: 120
+
+resources:
+  code:
+    service_keywords: configs/service_keywords_code.json
+    provider_to_service: configs/provider_to_service_code.json
+  text:
+    service_keywords: configs/service_keywords_text.json
+    provider_to_service: configs/provider_to_service_text.json

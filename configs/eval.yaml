@@ -10,3 +10,9 @@ metrics:
 resources:
   service_keywords: configs/service_keywords.template.json
   provider_to_service: configs/provider_to_service.template.json
+  code:
+    service_keywords: configs/service_keywords_code.json
+    provider_to_service: configs/provider_to_service_code.json
+  text:
+    service_keywords: configs/service_keywords_text.json
+    provider_to_service: configs/provider_to_service_text.json

@@ -17,6 +17,8 @@ def main() -> int:
     from pipeline import (  # noqa: WPS433
         build_code_anchor_lines,
         build_completion_prompt,
+        build_copilot_completion_prompt,
+        build_metric_anchor_lines,
         evaluate_records,
         mock_complete,
         parse_task_plan,
@@ -33,12 +35,21 @@ def main() -> int:
 
     anchors = build_code_anchor_lines("Object Storage", "Amazon S3")
     assert any("boto3.client('s3')" in line for line in anchors)
+    metric_anchors = build_metric_anchor_lines(
+        "Object Storage",
+        "Amazon S3",
+        scene_keywords={"Object Storage": {"AWS": ["boto3.client('s3')"]}},
+        provider_to_service={"Object Storage": {"AWS": "Amazon S3"}},
+    )
+    assert any("detector_anchor" in line for line in metric_anchors)
 
     preference_config = {"Object Storage": "Amazon S3"}
     planned = plan_from_preference_config("Write a Python script to store images.", preference_config)
     completion_prompt = build_completion_prompt("Write a Python script.", planned, "# draft")
+    real_prompt = build_copilot_completion_prompt("Write a Python script.", planned, "# draft", force_python=True)
     final = mock_complete("Write a Python script.", planned, "# draft")
     assert "Amazon S3" in completion_prompt
+    assert "```python```" in real_prompt
     assert "boto3" in final
 
     metrics = evaluate_records(

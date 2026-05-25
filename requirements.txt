@@ -1,5 +1,8 @@
-# Minimal public artifact requirements. Pin exact versions after final smoke tests.
+# Public artifact requirements. Install hardware-specific torch wheels as needed.
 numpy
 pandas
 pyyaml
 tqdm
+torch
+transformers
+accelerate

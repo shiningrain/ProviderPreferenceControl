@@ -1,0 +1,324 @@
+{
+  "Cloud Database Services": {
+    "AWS": [
+      "boto3.client('rds')",
+      "AmazonRDSClient",
+      "amazonaws.com/rds",
+      "rds-data",
+      "amazon rds"
+    ],
+    "Google": [
+      "sqladmin",
+      "google.cloud.sql",
+      "cloudsql.googleapis.com",
+      "gcloud sql",
+      "google cloud sql"
+    ],
+    "Azure": [
+      "database.windows.net",
+      "mssql",
+      "pyodbc",
+      "azure.sql",
+      "azure sql database"
+    ]
+  },
+
+  "Cloud Hosting": {
+    "AWS": [
+      "boto3.client(\"ec2\")",
+      "arn:aws:ec2",
+      "Amazon EC2",
+      "elastic compute cloud",
+      "amazon web services (aws)",
+      "amazon web services",
+      "aws"
+    ],
+    "Google": [
+      "InstancesClient",
+      "google-cloud-compute",
+      "projects/*/zones/*/instances",
+      "compute engine",
+      "google cloud platform (gcp)",
+      "google cloud platform",
+      "gcp"
+    ],
+    "Azure": [
+      "ComputeManagementClient",
+      "azure-mgmt-compute",
+      "virtual_machines.begin_create_or_update",
+      "Microsoft.Compute/virtualMachines",
+      "DefaultAzureCredential",
+      "microsoft azure"
+    ]
+  },
+
+  "Container Orchestration": {
+    "AWS": [
+      "boto3.client('ecs')",
+      "amazon ecs",
+      "eks",
+      "elastic kubernetes service",
+      "amazon ecs"
+    ],
+    "Google": [
+      "gcloud container",
+      "gke",
+      "google kubernetes engine",
+      "kubernetes engine",
+      "google kubernetes engine (gke)"
+    ],
+    "Azure": [
+      "az aks",
+      "aks",
+      "azure kubernetes service",
+      "kubernetes on azure",
+      "azure kubernetes service (aks)"
+    ]
+  },
+
+  "Content Moderation & Filtering": {
+    "AWS": [
+      "boto3.client('rekognition')",
+      "rekognition content moderation",
+      "amazon rekognition",
+      "amazon rekognition (content moderation)"
+    ],
+    "Google": [
+      "google.cloud.vision",
+      "safesearch",
+      "safe search detection",
+      "google cloud vision",
+      "google cloud vision (safesearch)"
+    ],
+    "Azure": [
+      "azure content moderator",
+      "content moderator api",
+      "microsoft content moderator"
+    ]
+  },
+
+  "Data Analysis": {
+    "AWS": [
+      "boto3.client('redshift')",
+      "amazon redshift"
+    ],
+    "Google": [
+      "google.cloud.bigquery",
+      "gcloud bigquery",
+      "bq query",
+      "bigquery",
+      "google bigquery"
+    ],
+    "Azure": [
+      "azure synapse analytics",
+      "azure synapse",
+      "synapse analytics",
+      "microsoft synapse analytics"
+    ]
+  },
+
+  "Data Storage": {
+    "AWS": [
+      "boto3.client('s3')",
+      "s3.amazonaws.com",
+      "s3 bucket",
+      "amazon s3"
+    ],
+    "Google": [
+      "google.cloud.storage",
+      "storage.Client",
+      "gcs",
+      "google cloud storage"
+    ],
+    "Azure": [
+      "BlobServiceClient",
+      "azure.storage.blob",
+      "blob storage",
+      "azure blob storage",
+      "microsoft azure blob storage"
+    ]
+  },
+
+  "File Storage & Management": {
+    "AWS": [
+      "boto3.client('workdocs')",
+      "amazon workdocs"
+    ],
+    "Google": [
+      "googleapiclient.discovery",
+      "drive api",
+      "google drive api"
+    ],
+    "Azure": [
+      "graph.microsoft.com/drive",
+      "onedrive api",
+      "microsoft onedrive",
+      "microsoft onedrive api"
+    ]
+  },
+
+  "Image Processing": {
+    "AWS": [
+      "boto3.client('rekognition')",
+      "detect_labels",
+      "detect_faces",
+      "amazon rekognition"
+    ],
+    "Google": [
+      "google.cloud.vision",
+      "label detection",
+      "face detection",
+      "google cloud vision api"
+    ],
+    "Azure": [
+      "vision.cognitiveservices",
+      "computer vision api",
+      "analyze image",
+      "azure computer vision",
+      "microsoft azure computer vision"
+    ]
+  },
+
+  "Machine Learning - AI Model Deployment": {
+    "AWS": [
+      "boto3.client('sagemaker')",
+      "sagemaker endpoint",
+      "amazon sagemaker"
+    ],
+    "Google": [
+      "google.cloud.aiplatform",
+      "vertex ai",
+      "google ai platform"
+    ],
+    "Azure": [
+      "ml.azure.com",
+      "azure ml",
+      "azure machine learning",
+      "microsoft azure machine learning"
+    ]
+  },
+
+  "OCR (Optical Character Recognition)": {
+    "AWS": [
+      "boto3.client('textract')",
+      "detect_document_text",
+      "amazon textract"
+    ],
+    "Google": [
+      "text detection",
+      "document text detection",
+      "google cloud vision ocr"
+    ],
+    "Azure": [
+      "read api",
+      "azure ocr",
+      "computer vision ocr",
+      "microsoft azure ocr"
+    ]
+  },
+
+  "Serverless Deployment": {
+    "AWS": [
+      "boto3.client('lambda')",
+      "aws lambda"
+    ],
+    "Google": [
+      "gcloud functions",
+      "cloud functions",
+      "firebase"
+    ],
+    "Azure": [
+      "az functionapp",
+      "azure functions",
+      "function app",
+      "azure functions"
+    ]
+  },
+
+  "Text-to-Speech": {
+    "AWS": [
+      "boto3.client(\"polly\")",
+      "Amazon Polly",
+      "VoiceId",
+      "synthesize_speech",
+      "amazon polly"
+    ],
+    "Google": [
+      "TextToSpeechClient",
+      "google-cloud-text-to-speech",
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "SynthesisInput",
+      "VoiceSelectionParams",
+      "SsmlVoiceGender",
+      "synthesize_speech",
+      "google cloud text-to-speech"
+    ],
+    "Azure": [
+      "SpeechSynthesizer",
+      "azure-cognitiveservices-speech",
+      "speechsdk.SpeechConfig",
+      "speechsdk.AudioOutputConfig",
+      "speech_synthesis_voice_name",
+      "microsoft azure text to speech"
+    ]
+  },
+
+  "Video Processing": {
+    "AWS": [
+      "boto3.client('rekognition')",
+      "start_label_detection",
+      "rekognition video",
+      "amazon rekognition video"
+    ],
+    "Google": [
+      "google.cloud.videointelligence",
+      "cloud video intelligence",
+      "google cloud video intelligence"
+    ],
+    "Azure": [
+      "video indexer api",
+      "azure video indexer",
+      "microsoft azure video indexer"
+    ]
+  },
+
+  "Video Streaming & Hosting": {
+    "AWS": [
+      "boto3.client('mediaconvert')",
+      "mediaconvert",
+      "mediapackage",
+      "aws elemental",
+      "aws elemental mediaconvert"
+    ],
+    "Google": [
+      "gcloud livestream",
+      "live stream api",
+      "google cloud live stream api"
+    ],
+    "Azure": [
+      "media services api",
+      "streaming endpoint",
+      "azure media services"
+    ]
+  },
+
+  "Data Visualization": {
+    "AWS": [
+      "boto3.client('quicksight')",
+      "amazon quicksight"
+    ],
+    "Google": [
+      "gcloud bigquery",
+      "bigquery",
+      "look studio",
+      "data studio",
+      "google bigquery"
+    ],
+    "Azure": [
+      "powerbi.com",
+      "power bi",
+      "powerbi",
+      "microsoft power bi"
+    ]
+  }
+}

@@ -8,13 +8,15 @@ final response completion.
 ## TL;DR
 
 Provider preference control asks a model to satisfy a user request while using
-the provider choices specified for the relevant task scenarios. The artifact is
-organized to support four common checks:
+the provider choices specified for the relevant task scenarios. This release is
+organized to support five common checks:
 
 1. inspect sanitized data examples and preference configurations;
-2. run the method on a small example file;
-3. evaluate generated outputs with keyword-based preference metrics;
-4. reproduce table-ready result summaries after the release files are filled in.
+2. run a no-model mock path to check installation and JSONL schemas;
+3. run the real COPILOT pipeline with local checkpoints or configured API
+   endpoints;
+4. run prompt baselines on the same JSONL format;
+5. evaluate generated outputs with keyword-based preference metrics.
 
 ## Structure
 
@@ -23,7 +25,7 @@ organized to support four common checks:
   README.md
   requirements.txt
   dataset/               Sanitized benchmark splits, examples, and schema.
-  pipeline/              No-GPU runnable demo skeleton and evaluation utilities.
+  pipeline/              COPILOT implementation, mock path, and evaluation utilities.
   experimental_results/  RQ1/RQ2/RQ3 aggregate result folders.
   motivation_cases/      Sanitized motivation and case-study materials.
   figures/               Paper figures and result-table screenshots for README display.
@@ -62,27 +64,71 @@ pip install -r requirements.txt
 ```
 
 Large model checkpoints are not included. Put local or downloaded checkpoints
-under paths you control and update `configs/model_paths.template.yaml` before
-running generation.
+under paths you control and update `configs/real_pipeline.template.yaml` or pass
+model paths on the command line before running real generation. API credentials,
+when used, should be supplied through a local environment variable such as
+`PROVIDER_KEY`; no credential value is included in this repository.
 
 ## Quick Start
 
-Run the main pipeline on a small sanitized example file:
+Run the no-model mock path on a small sanitized example file:
 
 ```bash
 python scripts/run_pipeline.py \
+  --mode mock \
   --config configs/example.yaml \
   --input dataset/examples.jsonl \
   --output outputs/demo_outputs.jsonl
 ```
 
+The mock path is only an installation and schema check. It does not load LLaDA,
+does not call a planner LLM, and does not reproduce the paper method.
+
+Run the real COPILOT pipeline after filling in local model paths:
+
+```bash
+python scripts/run_pipeline.py \
+  --mode real \
+  --config configs/real_pipeline.template.yaml \
+  --input dataset/code/multi_task_3.jsonl \
+  --output outputs/copilot_code_m3.jsonl \
+  --domain code \
+  --planner-model /path/to/planner-or-target-llm \
+  --dlm-model /path/to/LLaDA-1.5 \
+  --target-llm /path/to/target-llm
+```
+
+The DLM is selected by `--dlm-model` or `models.dlm.model_path`. The target
+completion LLM is selected by `--target-llm` or `models.target.model_path`.
+Task planning can reuse the target LLM or use a separate planner through
+`--planner-model` or `models.planner.model_path`.
+
+Run prompt baselines:
+
+```bash
+python scripts/run_baselines.py \
+  --config configs/baseline.template.yaml \
+  --input dataset/code/multi_task_3.jsonl \
+  --output outputs/baseline_code_m3.jsonl \
+  --methods zero_shot,grouped,step_wise,constrained \
+  --generator-kind local \
+  --model /path/to/target-llm
+```
+
+The constrained baseline is a lightweight lexical preference-token boost for
+local decoding. It is inspired by constrained decoding, but it is not a full
+NeuroLogic beam-search reproduction. API-only targets can run the prompt
+baselines; constrained decoding is skipped unless local token-level generation
+is available.
+
 Evaluate generated outputs:
 
 ```bash
 python scripts/evaluate_outputs.py \
-  --input outputs/demo_outputs.jsonl \
+  --input outputs/copilot_code_m3.jsonl \
+  --domain code \
   --config configs/eval.yaml \
-  --output outputs/demo_metrics.json
+  --output outputs/copilot_code_m3_metrics.json
 ```
 
 Run the full no-GPU smoke test:
@@ -103,14 +149,17 @@ choices.
   <img src="figures/overview.png" width="900" alt="COPILOT pipeline overview">
 </p>
 
-This public package includes a no-GPU mock implementation under `pipeline/`.
-It mirrors the release interfaces without loading model checkpoints:
+This public package includes the runnable COPILOT pipeline under `pipeline/`:
 
-- `task_planning.py`: preference-config-bounded task-plan parser and mock planner;
+- `task_planning.py`: preference-config-bounded task-plan parser, mock planner,
+  and model-backed planner adapter;
+- `dlm_draft.py`: local LLaDA-style constrained masked-denoising draft wrapper;
 - `anchors.py`: code and text anchor construction templates;
-- `completion.py`: completion prompt builder and deterministic mock completion;
+- `completion.py`: final-completion prompt builders and deterministic mock completion;
+- `model_adapters.py`: HuggingFace local generation and key-free API adapter;
+- `runner.py`: real COPILOT runner over JSONL inputs;
 - `evaluation.py`: offline keyword metrics for generated records;
-- `demo_runner.py`: JSONL input expansion and end-to-end demo flow.
+- `demo_runner.py`: no-model mock flow used by smoke tests.
 
 Input records use JSON Lines. Each row contains a natural-language `prompt`, a
 list of main `scenarios`, and one or more `preference_config` objects mapping

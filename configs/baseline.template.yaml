@@ -1,0 +1,35 @@
+# Template for public prompt baselines.
+
+input_path: dataset/code/multi_task_3.jsonl
+output_path: outputs/baseline_code_m3.jsonl
+domain: code
+
+baseline:
+  generator_kind: mock
+  methods:
+    - zero_shot
+    - grouped
+    - step_wise
+    - constrained
+
+generation:
+  repeat_times: 1
+  start_line: 1
+  end_line:
+  max_new_tokens: 2048
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 50
+
+models:
+  target:
+    kind: local
+    model_path: /path/to/target-llm
+    device_map: auto
+    torch_dtype: auto
+    trust_remote_code: true
+  api:
+    base_url: https://api.example.com/v1
+    model: provider-model-name
+    credential_env: PROVIDER_KEY
+    timeout_seconds: 120

@@ -1,4 +1,5 @@
-# Fill in local paths before running generation. Do not commit private paths.
-completion_model_path: /path/to/completion/model
-diffusion_model_path: /path/to/diffusion/model
+# Fill in local paths before running real generation. Do not commit private paths.
+planner_model_path: /path/to/planner-or-target-llm
+target_llm_model_path: /path/to/target-llm
+dlm_model_path: /path/to/LLaDA-1.5
 cache_dir: /path/to/local/cache

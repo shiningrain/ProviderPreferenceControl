@@ -1,0 +1,27 @@
+{
+  "taxi": {
+    "AddisonLee": "Addison Lee",
+    "Bolt": "Bolt",
+    "Uber": "Uber"
+  },
+  "train": {
+    "NationalRail": "National Rail",
+    "TrainPal": "TrainPal",
+    "Trainline": "Trainline"
+  },
+  "hotel": {
+    "Airbnb": "Airbnb",
+    "BookingCom": "Booking.com",
+    "HotelsCom": "Hotels.com"
+  },
+  "restaurant": {
+    "Resy": "Resy",
+    "TheFork": "TheFork",
+    "Tripadvisor": "TripAdvisor"
+  },
+  "attraction": {
+    "GetYourGuide": "GetYourGuide",
+    "GoogleMaps": "Google Maps",
+    "Tripadvisor": "Tripadvisor"
+  }
+}
