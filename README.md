@@ -39,6 +39,13 @@ either ignore the relevant preference or apply unrelated preferences from the
 same configuration to tasks that did not ask for them. The motivation example
 below illustrates this failure mode and the preference-aware response produced
 by COPILOT.
+The fine-grained \textbf{provider preference} is behind many real-world requests, where users favor specific brands for online services and developers form path dependencies on particular languages, frameworks, and cloud platforms shaped by existing technology stacks, organizational norms, and cost considerations.
+Unlike stable stylistic preferences, such provider preferences span multiple scenarios and candidate providers that evolve over time.
+However, existing preference control methods have limitations when applied to the provider preference.
+(i) Prompt-based methods may confound the preferences on different providers across different scenarios, leading to unstable and unreliable preference control (see the following figure).
+(ii) Finetuning- and steer-based methods rely on heavy training and manually-constructed datasets, and are impractical for the dynamic and evolving provider preferences.
+
+To fill this gap, we propose COPILOT, a training-free framework that leverages the collaboration of diffusion language model (DLM) and LLM to satisfy users' diverse and dynamic provider preferences.
 
 <p align="center">
   <img src="figures/motivation.png" width="760" alt="Motivation example">
@@ -143,22 +150,3 @@ and Markdown summaries are intended to make the reported aggregate results easy
 to inspect without requiring access to private infrastructure. For the sandbox
 supplement, we include only aggregate metrics and one sanitized event-trace
 example rather than the full dry-run logs.
-
-## Privacy and Credentials
-
-The repository does not include model checkpoints, private server paths, API
-keys, proxy URLs, private logs, or GPU-specific launch metadata. Configuration
-files under `configs/` are templates and should be filled locally before use.
-
-## License and Citation
-
-License and citation metadata will be added before public release.
-
-```bibtex
-@misc{provider_preference_control_artifact,
-  title = {Provider Preference Control Artifact},
-  author = {Authors},
-  year = {2026},
-  note = {Code and artifact release}
-}
-```
