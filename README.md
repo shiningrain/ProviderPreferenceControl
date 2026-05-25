@@ -81,8 +81,23 @@ python scripts/run_pipeline.py \
   --output outputs/demo_outputs.jsonl
 ```
 
-The mock path is only an installation and schema check. It does not load LLaDA,
-does not call a planner LLM, and does not reproduce the paper method.
+The mock path is only an installation and schema check. It validates that the
+JSONL reader, task-plan schema, anchor formatting, output schema, and evaluator
+entry points work in a no-model environment. It does not load LLaDA, does not
+call a planner LLM, and does not reproduce the paper method.
+
+## Running COPILOT with Your Models
+
+To run the actual COPILOT method, provide two model roles:
+
+- DLM draft model: a local LLaDA-style checkpoint used for constrained draft
+  generation. Specify it with `--dlm-model` or `models.dlm.model_path`.
+- Target LLM: the model that performs final response completion. Specify it
+  with `--target-llm` or `models.target.model_path`.
+
+By default, the task planner reuses the target LLM. This is the common setup
+for running COPILOT as a baseline. If you want a separate planner model, pass
+`--planner-model` or set `models.planner.model_path`.
 
 Run the real COPILOT pipeline after filling in local model paths:
 
@@ -93,15 +108,23 @@ python scripts/run_pipeline.py \
   --input dataset/code/multi_task_3.jsonl \
   --output outputs/copilot_code_m3.jsonl \
   --domain code \
-  --planner-model /path/to/planner-or-target-llm \
   --dlm-model /path/to/LLaDA-1.5 \
   --target-llm /path/to/target-llm
 ```
 
-The DLM is selected by `--dlm-model` or `models.dlm.model_path`. The target
-completion LLM is selected by `--target-llm` or `models.target.model_path`.
-Task planning can reuse the target LLM or use a separate planner through
-`--planner-model` or `models.planner.model_path`.
+Optional separate planner:
+
+```bash
+python scripts/run_pipeline.py \
+  --mode real \
+  --config configs/real_pipeline.template.yaml \
+  --input dataset/code/multi_task_3.jsonl \
+  --output outputs/copilot_code_m3.jsonl \
+  --domain code \
+  --planner-model /path/to/planner-llm \
+  --dlm-model /path/to/LLaDA-1.5 \
+  --target-llm /path/to/target-llm
+```
 
 Run prompt baselines:
 

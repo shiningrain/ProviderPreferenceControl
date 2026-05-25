@@ -50,7 +50,9 @@ python scripts/run_pipeline.py \
   --target-llm /path/to/target-llm
 ```
 
-The mock mode is only a schema and installation check. The real mode loads the
-planner or target LLM, the local DLM checkpoint, and runs task planning, draft
-generation, and final completion. Keep local launchers, scheduler scripts,
-private API wrappers, and raw logs out of the artifact.
+The mock mode is only a schema and installation check. It validates JSONL
+expansion, task-plan shape, anchor formatting, output schema, and evaluator
+compatibility without loading any model. The real mode loads the local DLM
+checkpoint and the target LLM, reusing the target LLM for planning unless a
+separate planner is specified. Keep local launchers, scheduler scripts, private
+API wrappers, and raw logs out of the artifact.
