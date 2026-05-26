@@ -166,7 +166,7 @@
         }
       ]
     },
-    "proofer": {
+    "copilot": {
       "display_name": "COPILOT",
       "response": "Here's the plan to book your hotel using Airbnb:\n\nFirst, use Airbnb to search for a stay for 1 person for 4 nights, starting this Saturday. Use the Airbnb website or app search interface to find available properties that meet these criteria. Then filter these properties using Airbnb's built-in website filters so the results remain suitable for a solo stay. Prioritize properties listed on Airbnb.\n\nIf the initial search for 4 nights on Airbnb yields no available options, check for 2-night availability on Airbnb, still starting this Saturday. Again, use the Airbnb search interface and built-in filters to find suitable properties. This keeps the plan focused on the user's preferred hotel service while respecting the fallback to a 2-night stay.",
       "satisfied_preferences": [
@@ -185,7 +185,7 @@
         "id": 1,
         "preference_config_index": 0,
         "repeat_index": 0,
-        "method_key": "proofer"
+        "method_key": "copilot"
       }
     }
   }

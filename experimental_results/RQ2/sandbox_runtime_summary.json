@@ -12,7 +12,7 @@
     "runtime_dr": "Distractor-provider activation over runtime call events only; lower is better."
   },
   "headline": {
-    "PROOFER-DLM": {
+    "COPILOT-DLM": {
       "n": 300,
       "sandbox_success": 84.3,
       "runtime_pa": 46.3,
@@ -43,8 +43,8 @@
   },
   "takeaway": [
     "Prompt-only baselines can achieve high sandbox success while still activating many distractor providers at runtime.",
-    "PROOFER-DLM is not the highest method on sandbox success alone, but it gives much stronger runtime provider control than prompt-only baselines.",
-    "The Plan+Template Anchor variant narrows the gap to PROOFER-DLM, which suggests that provider-bearing structure is important, while the DLM draft still provides a complete method instance."
+    "COPILOT-DLM is not the highest method on sandbox success alone, but it gives much stronger runtime provider control than prompt-only baselines.",
+    "The Plan+Template Anchor variant narrows the gap to COPILOT-DLM, which suggests that provider-bearing structure is important, while the DLM draft still provides a complete method instance."
   ],
   "files": {
     "aggregate_csv": "sandbox_runtime_results.csv",

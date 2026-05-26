@@ -24,7 +24,7 @@
     "sample_description": "aligned 300-record Code subset",
     "harness_mode": "isolated-functions",
     "caveat": "Mocked dry-run structural executability check with fake SDK and runtime stubs; not live cloud-service execution.",
-    "proofer_dlm": {
+    "copilot_dlm": {
       "sandbox_success": 84.3,
       "runtime_pa": 46.3,
       "runtime_ia": 62.0,

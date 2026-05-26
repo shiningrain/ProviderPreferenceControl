@@ -14,7 +14,7 @@ choices appear in runtime calls without activating unrelated providers.
 
 | Method | N | Sandbox Success | R-PA | R-IA | R-DR |
 |---|---:|---:|---:|---:|---:|
-| PROOFER-DLM | 300 | 84.3 | 46.3 | 62.0 | 18.3 |
+| COPILOT-DLM | 300 | 84.3 | 46.3 | 62.0 | 18.3 |
 | Plan+Direct | 300 | 76.7 | 21.0 | 41.5 | 12.0 |
 | Plan+Template Anchor | 300 | 81.0 | 43.7 | 58.5 | 15.0 |
 | zero_shot | 300 | 92.3 | 19.7 | 43.2 | 53.3 |
@@ -28,7 +28,7 @@ zero-shot and constrained reach 92.3 and 91.0 sandbox success, respectively,
 while their runtime distractor rates are 53.3 and 49.7. This indicates that
 syntactic executability alone does not imply provider control.
 
-PROOFER-DLM is not the top method on sandbox success alone. Its runtime
+COPILOT-DLM is not the top method on sandbox success alone. Its runtime
 provider-control profile is much stronger, however, with 46.3 runtime PA, 62.0
 runtime IA, and 18.3 runtime DR. The Plan+Template Anchor variant reaches a
 similar runtime margin, which supports the broader conclusion that explicit

@@ -1,5 +1,5 @@
 method,n,python_script,parse_ok,sandbox_success,runtime_calls,runtime_pa,runtime_ia,runtime_dr,runtime_pa_minus_dr,runtime_ia_minus_dr,pa_imports_calls,ia_imports_calls,dr_imports_calls
-PROOFER-DLM,300,100.0,91.3,84.3,83.7,46.3,62.0,18.3,28.0,43.7,47.0,62.5,18.3
+COPILOT-DLM,300,100.0,91.3,84.3,83.7,46.3,62.0,18.3,28.0,43.7,47.0,62.5,18.3
 Plan+Direct,300,100.0,88.0,76.7,75.3,21.0,41.5,12.0,9.0,29.5,21.7,42.8,13.0
 Plan+Template Anchor,300,100.0,92.7,81.0,80.7,43.7,58.5,15.0,28.7,43.5,45.0,59.5,15.3
 zero_shot,300,100.0,98.3,92.3,92.3,19.7,43.2,53.3,-33.7,-10.2,20.3,44.0,54.0

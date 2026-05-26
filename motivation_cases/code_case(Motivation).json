@@ -50,14 +50,14 @@
           "scenario": "Video Processing",
           "expected_service": "Microsoft Azure Video Indexer",
           "evidence": "Detected the expected service in the response."
-        },
+        }
+      ],
+      "unsatisfied_preferences": [
         {
           "scenario": "Cloud Hosting",
           "expected_service": "Microsoft Azure",
           "evidence": "Detected the expected service in the response."
-        }
-      ],
-      "unsatisfied_preferences": [],
+        }],
       "distractor_preferences_activated": [
         {
           "scenario": "Data Storage",
@@ -199,7 +199,7 @@
         }
       ]
     },
-    "proofer_qwen": {
+    "copilot_qwen": {
       "display_name": "COPILOT on Qwen",
       "status": "success",
       "source_record": {
@@ -207,7 +207,7 @@
         "preference_config_index": 2,
         "repeat_index": 2,
         "dataset": "code_multi_task_3",
-        "method_key": "proofer_qwen"
+        "method_key": "copilot_qwen"
       },
       "response": "```python\n# === file: azure_cdn_setup.py ===\n\"\"\"\nScript to set up Azure CDN for caching and distributing static assets globally.\nThis uses Azure Blob Storage as the origin and configures a CDN profile with a\ncustom domain to serve assets from the closest edge location to the user.\n\"\"\"\n\nimport os\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.cdn import CdnManagementClient\nfrom azure.mgmt.storage import StorageManagementClient\nfrom azure.mgmt.storage.models import StorageAccountCreateParameters, Sku, SkuName\nfrom azure.mgmt.cdn.models import ProfileInner, SkuName as CdnSkuName, CustomDomainInner, EndpointInner, OriginInner\n\n# Azure subscription ID and resource group\nsubscription_id = os.getenv(\"AZURE_SUBSCRIPTION_ID\")\nresource_group = \"StaticAssetsRG\"\nlocation = \"eastus\"\n\n# Storage account and CDN profile names\nstorage_account_name = \"staticassetsstorage\"\ncdn_profile_name = \"StaticContentCDN\"\ncdn_endpoint_name = \"staticcdnendpoint\"\ncdn_origin_name = \"staticcdnorigin\"\n\n# Initialize Azure clients\ncredential = DefaultAzureCredential()\ncdn_client = CdnManagementClient(credential, subscription_id)\nstorage_client = StorageManagementClient(credential, subscription_id)\n\n# Step 1: Create a storage account to host static assets\nstorage_params = StorageAccountCreateParameters(\n    sku=Sku(name=SkuName.standard_lrs),\n    kind=\"BlobStorage\",\n    location=location\n)\nstorage_client.storage_accounts.begin_create(resource_group, storage_account_name, storage_params).wait()\n\n# Step 2: Create CDN profile and endpoint\ncdn_profile = ProfileInner(\n    location=location,\n    sku=ProfileInner.Sku(name=CdnSkuName.standard_azure),\n    tags={}\n)\n\ncdn_client.profiles.begin_create(resource_group, cdn_profile_name, cdn_profile).wait()\n\n# Step 3: Create CDN origin using the storage account\norigin_url = f\"https://{storage_account_name}.blob.core.windows.net\"\norigin = OriginInner(\n    name=cdn_origin_name,\n    host_name=origin_url,\n    http_port=80,\n    https_port=443\n)\n\ncdn_client.origins.begin_create(\n    resource_group,\n    cdn_profile_name,\n    cdn_endpoint_name,\n    origin_name=cdn_origin_name,\n    origin=origin\n).wait()\n\n# Step 4: Create CDN endpoint to serve content\nendpoint = EndpointInner(\n    name=cdn_endpoint_name,\n    location=location,\n    is_http_allowed=True,\n    is_https_allowed=True,\n    origin_groups=[cdn_origin_name],\n    content_types_to_compress=[\"text/html\", \"text/css\", \"application/javascript\"]\n)\n\ncdn_client.endpoints.begin_create(\n    resource_group,\n    cdn_profile_name,\n    cdn_endpoint_name,\n    endpoint\n).wait()\n\nprint(\"Azure CDN setup complete. Static assets will be cached and served globally.\")\n\n# === file: azure_video_optimization.py ===\n\"\"\"\nScript to optimize video file size using Microsoft Azure Video Indexer.\nThis script uploads a video file, processes it to reduce file size while maintaining\nquality, and downloads the optimized version.\n\"\"\"\n\nfrom azure.identity import DefaultAzureCredential\nfrom azure.ai.videoindexer import VideoIndexerClient\nfrom azure.ai.videoindexer.models import VideoCreateParameters, VideoIndexerMediaContent\nimport os\n\n# Azure Video Indexer configuration\naccount_id = os.getenv(\"VIDEO_INDEXER_ACCOUNT_ID\")\nlocation = os.getenv(\"VIDEO_INDEXER_LOCATION\")  # e.g., \"trial\", \"eastus\"\nsubscription_credential = os.getenv(\"VIDEO_INDEXER_SUBSCRIPTION_CREDENTIAL\")\nvideo_file_path = \"input_video.mp4\"\noutput_file_path = \"optimized_video.mp4\"\n\n# Initialize Video Indexer client\ncredential = DefaultAzureCredential()\nclient = VideoIndexerClient(\n    endpoint=f\"https:{location}.api.videoindexer.ai\",\n    credential=credential,\n    subscription_credential=subscription_credential,\n    account_id=account_id\n)\n\n# Step 1: Upload video file\nwith open(video_file_path, \"rb\") as video_file:\n    video_content = VideoIndexerMediaContent(content=video_file.read())\n    upload_result = client.videos.upload_video(\n        video_content=video_content,\n        video_name=\"OptimizedVideo\"\n    )\n\nvideo_id = upload_result[\"id\"]\n\n# Step 2: Process video with optimization settings (adjust bitrate, resolution, codec)\nclient.videos.begin_index_video(\n    video_id=video_id,\n    video_create_parameters=VideoCreateParameters(\n        video_name=\"OptimizedVideo\",\n        video_file_path=video_file_path,\n        index_content_types=[\"Video\"],\n        processing_options={\n            \"video_bitrate\": 1500000,  # 1.5 Mbps\n            \"video_resolution\": \"1080p\",\n            \"video_codec\": \"h264\"\n        }\n    )\n).wait()\n\n# Step 3: Download optimized video\noptimized_video_url = client.videos.get_video_file_url(\n    video_id=video_id,\n    video_file_type=\"Mp4\"\n)\n\nclient.videos.download_video_file(\n    video_id=video_id,\n    video_file_type=\"Mp4\",\n    output_path=output_file_path\n)\n\nprint(\"Video optimization complete. Optimized video saved as:\", output_file_path)\n\n# === file: text_to_speech.py ===\n\"\"\"\nScript to read out text content from websites and documents for visually impaired users.\nThis script uses PyPDF2 for PDF files and requests for web pages, and pyttsx3 for text-to-speech.\n\"\"\"\n\nimport os\nimport requests\nfrom PyPDF2 import PdfReader\nimport pyttsx3\n\ndef extract_text_from_url(url):\n    \"\"\"Extract text content from a webpage.\"\"\"\n    response = requests.get(url)\n    return response.text\n\ndef extract_text_from_pdf(pdf_path):\n    \"\"\"Extract text content from a PDF file.\"\"\"\n    with open(pdf_path, \"rb\") as file:\n        reader = PdfReader(file)\n        text = \"\"\n        for page in reader.pages:\n            text += page.extract_text()\n        return text\n\ndef text_to_speech(text):\n    \"\"\"Convert text to speech using pyttsx3.\"\"\"\n    engine = pyttsx3.init()\n    engine.setProperty(\"rate\", 150)  # Words per minute\n    engine.setProperty(\"volume\", 0.9)\n    engine.say(text)\n    engine.runAndWait()\n\n# Example usage\nif __name__ == \"__main__\":\n    # Extract and read out text from a website\n    webpage_url = \"https://example.com\"\n    webpage_text = extract_text_from_url(webpage_url)\n    text_to_speech(webpage_text)\n\n    # Extract and read out text from a PDF\n    pdf_path = \"document.pdf\"\n    pdf_text = extract_text_from_pdf(pdf_path)\n    text_to_speech(pdf_text)\n```",
       "satisfied_preferences": [
@@ -223,15 +223,7 @@
         }
       ],
       "unsatisfied_preferences": [],
-      "distractor_preferences_activated": [
-        {
-          "scenario": "Data Storage",
-          "service": "Amazon S3",
-          "detected_services": [
-            "Microsoft Azure Blob Storage"
-          ]
-        }
-      ]
+      "distractor_preferences_activated": []
     }
   }
 }

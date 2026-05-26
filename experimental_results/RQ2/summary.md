@@ -21,7 +21,7 @@ separates syntactic or mocked executability from provider control at runtime.
 The prompt-only baselines can be highly runnable under this mocked harness, but
 their runtime traces often activate distractor providers. Zero-shot reaches 92.3
 sandbox success while its runtime DR is 53.3, and constrained reaches 91.0
-sandbox success while its runtime DR is 49.7. By contrast, PROOFER-DLM reaches
+sandbox success while its runtime DR is 49.7. By contrast, COPILOT-DLM reaches
 84.3 sandbox success with 46.3 runtime PA, 62.0 runtime IA, and 18.3 runtime DR.
 
 These results support the main ablation pattern from another angle. Runtime
